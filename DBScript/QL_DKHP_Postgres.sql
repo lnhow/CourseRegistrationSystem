@@ -1,6 +1,9 @@
+--IMPORTANT!!!
+--RUN THESE BEFORE OPENNING CONNECTION TO DB AND RUN THE REST
 DROP DATABASE IF EXISTS "QL_DKHP";
 
 CREATE DATABASE "QL_DKHP";
+--RUN THESE BEFORE OPENNING CONNECTION TO DB AND RUN THE REST
 
 
 CREATE FUNCTION TABLE_READ_ONLY() RETURNS TRIGGER
@@ -71,11 +74,14 @@ CREATE TRIGGER RegisterStatus_Read_only
 --Course Register Status
 --Read-only support tables---------------------------------------
 
-
 CREATE TABLE Account(
 	AccountID BIGSERIAL PRIMARY KEY,
 	Username VARCHAR(20) UNIQUE NOT NULL,
-	Password VARCHAR(50) NOT NULL
+	Password VARCHAR(50) NOT NULL,
+	AccountType INT DEFAULT 0	--0: student, 1: staff
+	
+	CONSTRAINT Account_AccountType
+	CHECK (AccountType IN (0,1))
 );
 
 CREATE TABLE Subject(
@@ -98,7 +104,7 @@ CREATE TABLE Semester(
 
 CREATE TABLE ClassInfo(
 	ClassID SERIAL PRIMARY KEY,
-	ClassName VARCHAR(10)
+	ClassName VARCHAR(10) UNIQUE
 );
 
 
@@ -221,3 +227,17 @@ ADD CONSTRAINT FK_SESSION_Staff
 	REFERENCES Staff(StaffID)
 	ON DELETE SET NULL;
 --RegistrationSession---------------
+
+INSERT INTO Account(Username, Password, AccountType)
+VALUES
+	('admin','admin',1),
+	('student','student',0);
+INSERT INTO Staff(StaffName, AccountID)
+VALUES
+	('Admin',1);
+INSERT INTO ClassInfo(ClassName)
+VALUES
+	('18CTT3');
+INSERT INTO Student(StudentID, StudentName, Male, ClassID, AccountID)
+VALUES
+	('18120000','Student',TRUE,1,2);
