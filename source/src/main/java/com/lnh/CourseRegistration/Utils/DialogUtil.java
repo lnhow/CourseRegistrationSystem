@@ -7,7 +7,7 @@ import javax.swing.*;
  * Wrapper class for displaying dialog messages
  * */
 public class DialogUtil {
-    static JFrame frame;
+    static JFrame frame = null;
 
     public static void setFrame(JFrame frame)  { DialogUtil.frame = frame; }
 
