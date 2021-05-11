@@ -1,11 +1,7 @@
-package com.lnh.CourseRegistration.UIs;
+package com.lnh.CourseRegistration.Tests;
 
 import com.lnh.CourseRegistration.DAOs.AccountDAO;
 import com.lnh.CourseRegistration.Entities.Account;
-import com.lnh.CourseRegistration.Utils.HibernateUtil;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 
 import java.util.List;
 
