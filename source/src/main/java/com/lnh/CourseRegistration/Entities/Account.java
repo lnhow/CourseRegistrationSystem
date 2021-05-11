@@ -5,6 +5,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Account")
 public class Account {
+    public static final int ACCOUNT_STUDENT = 0;
+    public static final int ACCOUNT_STAFF = 1;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "AccountID")
