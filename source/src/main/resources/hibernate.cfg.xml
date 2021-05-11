@@ -19,5 +19,9 @@
         <mapping class="com.lnh.CourseRegistration.Entities.Account"/>
         <mapping class="com.lnh.CourseRegistration.Entities.Staff"/>
 
+        <mapping class="com.lnh.CourseRegistration.Entities.SupportEntities.Weekday"/>
+        <mapping class="com.lnh.CourseRegistration.Entities.SupportEntities.Shift"/>
+        <mapping class="com.lnh.CourseRegistration.Entities.SupportEntities.RegisterStatus"/>
+
     </session-factory>
 </hibernate-configuration>
