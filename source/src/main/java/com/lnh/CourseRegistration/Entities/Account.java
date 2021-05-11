@@ -5,14 +5,15 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Account")
 public class Account {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "AccountID")
-    private int id;
+    private long id;
 
-    @Column(name = "Username")
+    @Column(name = "Username", length = 20, unique = true, nullable = false)
     private String username;
 
-    @Column(name = "Password")
+    @Column(name = "Password", length = 50, nullable = false)
     private String password;
 
     @Column(name = "AccountType")
@@ -28,11 +29,11 @@ public class Account {
         this.type = type;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

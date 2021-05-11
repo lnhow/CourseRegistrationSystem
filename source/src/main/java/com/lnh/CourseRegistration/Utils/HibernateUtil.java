@@ -37,11 +37,11 @@ public class HibernateUtil {
             AbstractEntityPersister aep = (AbstractEntityPersister)ep;
 
             System.out.println(aep.getTableName());
-            System.out.println(Arrays.toString(aep.getIdentifierColumnNames()));
-            for (String propName : aep.getPropertyNames()) {
-                System.out.println(propName);
-                System.out.println(Arrays.toString(aep.getPropertyColumnNames(propName)));
-            }
+            // System.out.println(Arrays.toString(aep.getIdentifierColumnNames()));
+//            for (String propName : aep.getPropertyNames()) {
+//                System.out.println(propName);
+//                System.out.println(Arrays.toString(aep.getPropertyColumnNames(propName)));
+//            }
         }
     }
 }
