@@ -17,6 +17,7 @@
         <property name="show_sql">true</property>
 
         <mapping class="com.lnh.CourseRegistration.Entities.Account"/>
+        <mapping class="com.lnh.CourseRegistration.Entities.Staff"/>
 
     </session-factory>
 </hibernate-configuration>
