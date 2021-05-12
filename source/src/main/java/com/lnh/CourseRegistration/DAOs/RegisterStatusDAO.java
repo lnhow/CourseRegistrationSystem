@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+import java.util.Collections;
 import java.util.List;
 
 public class RegisterStatusDAO {
@@ -16,7 +17,7 @@ public class RegisterStatusDAO {
 
     public static List<RegisterStatus> getAll() throws Exception {
         if (typeOfStatuses == null) {
-            typeOfStatuses = getNewInstance();
+            typeOfStatuses = Collections.unmodifiableList(getNewInstance());
         }
 
         return typeOfStatuses;

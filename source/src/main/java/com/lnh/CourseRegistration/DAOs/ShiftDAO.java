@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ShiftDAO {
@@ -17,7 +18,7 @@ public class ShiftDAO {
 
     public static List<Shift> getAll() throws Exception {
         if (shifts == null) {
-            shifts = getNewInstance();
+            shifts = Collections.unmodifiableList(getNewInstance());
         }
 
         return shifts;

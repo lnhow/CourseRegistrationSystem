@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 
+import java.util.Collections;
 import java.util.List;
 
 public class WeekdayDAO {
@@ -16,7 +17,7 @@ public class WeekdayDAO {
 
     public static List<Weekday> getAll() throws Exception {
         if (weekdays == null) {
-            weekdays = getNewInstance();
+            weekdays = Collections.unmodifiableList(getNewInstance());
         }
 
         return weekdays;
