@@ -1,5 +1,8 @@
 package com.lnh.CourseRegistration.Tests;
 
+import com.lnh.CourseRegistration.DAOs.RegisterStatusDAO;
+import com.lnh.CourseRegistration.DAOs.ShiftDAO;
+import com.lnh.CourseRegistration.DAOs.WeekdayDAO;
 import com.lnh.CourseRegistration.Entities.Staff;
 import com.lnh.CourseRegistration.Entities.SupportEntities.RegisterStatus;
 import com.lnh.CourseRegistration.Entities.SupportEntities.Shift;
@@ -22,22 +25,22 @@ public class SupportEntitiesTest {
 
     private static void testStatuses() {
         List<RegisterStatus> list = null;
-        SessionFactory factory = HibernateUtil.getSessionFactory();
-        Session session = factory.openSession();
 
         try {
-            String hql = "SELECT status FROM RegisterStatus status";
-            Query<RegisterStatus> query = session.createQuery(hql);
-            list = query.list();
-        } catch (HibernateException ex) {
-            System.out.println(ex.getMessage());
-        } finally {
-            session.close();
+            list = RegisterStatusDAO.getAll();
+        } catch (Exception exception) {
+            System.out.println("Unable to get statuses");
+            return;
         }
 
-        if (list == null)  {
-            System.out.println("List empty");
-            return;
+        for (RegisterStatus status : list) {
+            System.out.println(status.getStatusID() + " | " + status.getStatusDesc());
+        }
+
+        try {
+            list = RegisterStatusDAO.getAll();
+        } catch (Exception exception) {
+            System.out.println("Unable to get statuses");
         }
 
         for (RegisterStatus status : list) {
@@ -51,17 +54,20 @@ public class SupportEntitiesTest {
         Session session = factory.openSession();
 
         try {
-            String hql = "SELECT w FROM Weekday w";
-            Query<Weekday> query = session.createQuery(hql);
-            list = query.list();
-        } catch (HibernateException ex) {
-            System.out.println(ex.getMessage());
-        } finally {
-            session.close();
+            list = WeekdayDAO.getAll();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return;
         }
 
-        if (list == null)  {
-            System.out.println("List empty");
+        for (Weekday weekday : list) {
+            System.out.println(weekday.getWeekdayID() + " | " + weekday.getWeekdayName());
+        }
+
+        try {
+            list = WeekdayDAO.getAll();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return;
         }
 
@@ -72,21 +78,22 @@ public class SupportEntitiesTest {
 
     private static void testShifts() {
         List<Shift> list = null;
-        SessionFactory factory = HibernateUtil.getSessionFactory();
-        Session session = factory.openSession();
 
         try {
-            String hql = "SELECT s FROM Shift s";
-            Query<Shift> query = session.createQuery(hql);
-            list = query.list();
-        } catch (HibernateException ex) {
-            System.out.println(ex.getMessage());
-        } finally {
-            session.close();
+            list = ShiftDAO.getAll();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return;
         }
 
-        if (list == null)  {
-            System.out.println("List empty");
+        for (Shift shift : list) {
+            System.out.println(shift.getShiftID() + " | " + shift.getShiftStart() + " - " + shift.getShiftEnd());
+        }
+
+        try {
+            list = ShiftDAO.getAll();
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return;
         }
 
