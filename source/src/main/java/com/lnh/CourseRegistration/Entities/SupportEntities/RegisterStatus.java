@@ -26,15 +26,7 @@ public class RegisterStatus {
         return statusID;
     }
 
-    public void setStatusID(int statusID) {
-        this.statusID = statusID;
-    }
-
     public String getStatusDesc() {
         return statusDesc;
-    }
-
-    public void setStatusDesc(String statusDesc) {
-        this.statusDesc = statusDesc;
     }
 }

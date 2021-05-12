@@ -31,23 +31,11 @@ public class Shift {
         return shiftID;
     }
 
-    public void setShiftID(int shiftID) {
-        this.shiftID = shiftID;
-    }
-
     public Time getShiftStart() {
         return shiftStart;
     }
 
-    public void setShiftStart(Time shiftStart) {
-        this.shiftStart = shiftStart;
-    }
-
     public Time getShiftEnd() {
         return shiftEnd;
-    }
-
-    public void setShiftEnd(Time shiftEnd) {
-        this.shiftEnd = shiftEnd;
     }
 }

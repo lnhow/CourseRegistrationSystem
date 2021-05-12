@@ -27,15 +27,7 @@ public class Weekday {
         return weekdayID;
     }
 
-    public void setWeekdayID(int weekdayID) {
-        this.weekdayID = weekdayID;
-    }
-
     public String getWeekdayName() {
         return weekdayName;
-    }
-
-    public void setWeekdayName(String weekdayName) {
-        this.weekdayName = weekdayName;
     }
 }
