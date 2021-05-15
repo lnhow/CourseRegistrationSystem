@@ -13,7 +13,7 @@ public class Staff {
     @Column(name = "StaffName")
     private String name;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "AccountID")
     private Account account;
 
