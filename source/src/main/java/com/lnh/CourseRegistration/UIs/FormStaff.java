@@ -33,7 +33,7 @@ public class FormStaff {
             return;
         }
 
-        txtStaff.setText("Welcome, " + currentLoggedIn.getName());
+        setAccountText();
     }
 
     private void setVisible() {
@@ -60,11 +60,18 @@ public class FormStaff {
         AppFrame.dispose();
     }
 
+    private void openAccountForm() {
+        JDialog dialog = new JDialog(this.AppFrame);
+        new FormAccount(dialog, currentLoggedIn);
+        fetchStaff(currentLoggedIn.getAccount());
+        setAccountText();
+    }
+
     private void initComponents() {
         btnInfo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                openAccountForm();
             }
         });
         btnLogOut.addActionListener(new ActionListener() {
@@ -73,6 +80,10 @@ public class FormStaff {
                 logOut();
             }
         });
+    }
+
+    private void setAccountText() {
+        txtStaff.setText("Welcome, " + currentLoggedIn.getName());
     }
 
 }
