@@ -11,6 +11,10 @@ public class DialogUtil {
 
     public static void setFrame(JFrame frame)  { DialogUtil.frame = frame; }
 
+    public static void showInfoMessage(String message) {
+        JOptionPane.showMessageDialog(frame, message);
+    }
+
     public static void showWarningMessage(String message) {
         JOptionPane.showMessageDialog(frame, message, "Warning", JOptionPane.WARNING_MESSAGE);
     }
