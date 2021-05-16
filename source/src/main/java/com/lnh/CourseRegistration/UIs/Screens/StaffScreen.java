@@ -22,9 +22,10 @@ public class StaffScreen extends JFrame implements ActionListener {
     private JButton btnEdit;
     private JButton btnNew;
     private JButton btnSearch;
+    private JScrollPane paneTable;
 
     private JPopupMenu popupMenu;
-    private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem;
+    private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, searchMenuItem;
 
     private static JFrame AppFrame;
     private DefaultTableModel tableModel;
@@ -98,13 +99,17 @@ public class StaffScreen extends JFrame implements ActionListener {
         newMenuItem = new JMenuItem("Thêm mới");
         editMenuItem = new JMenuItem("Chỉnh sửa");
         deleteMenuItem = new JMenuItem("Xóa");
+        searchMenuItem = new JMenuItem("Tìm kiếm");
 
         refreshMenuItem.addActionListener(this);
+        searchMenuItem.addActionListener(this);
         newMenuItem.addActionListener(this);
         editMenuItem.addActionListener(this);
         deleteMenuItem.addActionListener(this);
 
+        popupMenu.add(searchMenuItem);
         popupMenu.add(refreshMenuItem);
+        popupMenu.addSeparator();
         popupMenu.add(newMenuItem);
         popupMenu.add(editMenuItem);
         popupMenu.add(deleteMenuItem);
@@ -115,6 +120,8 @@ public class StaffScreen extends JFrame implements ActionListener {
             }
         };
         mainTable.addMouseListener(mouseAdapter);
+        //Make the empty area on table pane (if present) can show popup
+        paneTable.addMouseListener(mouseAdapter);
     }
 
     private void initBtnListeners() {
@@ -138,8 +145,8 @@ public class StaffScreen extends JFrame implements ActionListener {
             editSelectedStaff();
         } else if (source == btnDelete || source == deleteMenuItem) {
             deleteSelectedStaff();
-        } else if (source == btnSearch) {
-
+        } else if (source == btnSearch || source == searchMenuItem) {
+            search();
         } else if (source == refreshMenuItem) {
             refreshStaffTable();
         }
@@ -149,19 +156,27 @@ public class StaffScreen extends JFrame implements ActionListener {
     private void refreshStaffTable() {
         try {
             List<Staff> staffList = StaffDAO.getAll();
-            tableModel.setRowCount(0);
-
-            for (Staff staff: staffList) {
-                Object[] rowData = {
-                        staff.getId(),
-                        staff.getName(),
-                        staff.getAccount().getUsername()
-                };
-                tableModel.addRow(rowData);
-            }
+            setTableData(staffList);
         } catch (Exception ex) {
             String msg = "Lỗi không lấy được danh sách " + ObjectName +"\n";
             DialogUtil.showErrorMessage(msg + ex.getMessage());
+        }
+    }
+
+    /**
+     * Set table data to list of
+     * @param staffList List data of staff to set
+     */
+    private void setTableData(List<Staff> staffList) {
+        tableModel.setRowCount(0);
+
+        for (Staff staff: staffList) {
+            Object[] rowData = {
+                    staff.getId(),
+                    staff.getName(),
+                    staff.getAccount().getUsername()
+            };
+            tableModel.addRow(rowData);
         }
     }
 
@@ -217,16 +232,29 @@ public class StaffScreen extends JFrame implements ActionListener {
         refreshStaffTable();
     }
 
-    public void saveStaff(Staff staff) throws Exception {
-        if (StaffDAO.getByAccountID(staff.getAccount().getId()) == null) {
-            StaffDAO.insert(staff);
-        }
-        else {
-            StaffDAO.update(staff);
-        }
+    /**
+     * Search for object with conditions
+     */
+    private void search() {
+        String msg = "Nhập tên " + ObjectName + " cần tìm:";
+        String value = JOptionPane.showInputDialog(
+                this,
+                msg,
+                "Tìm kiếm",
+                JOptionPane.INFORMATION_MESSAGE
+        );
 
-        refreshStaffTable();
+        if (value != null && value.length() > 0) {
+            try {
+                List<Staff> staffList = StaffDAO.searchByName(value);
+                setTableData(staffList);
+            } catch (Exception ex) {
+                DialogUtil.showErrorMessage("Lỗi tìm kiếm.\n" + ex.getMessage());
+            }
+        }
     }
+
+
 
     //Get Object Info from table------------------------------------------------------
     /**
@@ -257,5 +285,24 @@ public class StaffScreen extends JFrame implements ActionListener {
         }
 
         return id;
+    }
+
+
+
+    //Methods use by children-----------------------------------------------
+    /**
+     * Save (Insert/Update) staff to Database
+     * @param staff Staff to be save to Database
+     * @throws Exception If insert/update fails
+     */
+    public void saveStaff(Staff staff) throws Exception {
+        if (StaffDAO.getByAccountID(staff.getAccount().getId()) == null) {
+            StaffDAO.insert(staff);
+        }
+        else {
+            StaffDAO.update(staff);
+        }
+
+        refreshStaffTable();
     }
 }

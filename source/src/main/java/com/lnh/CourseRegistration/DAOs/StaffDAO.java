@@ -31,6 +31,28 @@ public class StaffDAO {
         return list;
     }
 
+    public static List<Staff> searchByName(String value) throws Exception {
+        List<Staff> list = null;
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+
+        try {
+            //Case insensitive search
+            String hql = "SELECT sta"
+                    + " FROM Staff sta"
+                    + " WHERE lower(sta.name) LIKE lower(:search_name)";
+            Query<Staff> query = session.createQuery(hql);
+            query.setParameter("search_name", "%" + value + "%");
+            list = query.list();
+        } catch (HibernateException ex) {
+            HelperUtils.throwException(ex.getMessage());
+        } finally {
+            session.close();
+        }
+
+        return list;
+    }
+
     public static void insert(Staff newStaff) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
 

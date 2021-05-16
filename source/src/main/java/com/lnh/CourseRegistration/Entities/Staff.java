@@ -10,7 +10,7 @@ public class Staff {
     @Column(name = "StaffID")
     private long id;
 
-    @Column(name = "StaffName")
+    @Column(name = "StaffName", length = 50)
     private String name;
 
     @OneToOne(cascade = CascadeType.ALL)
