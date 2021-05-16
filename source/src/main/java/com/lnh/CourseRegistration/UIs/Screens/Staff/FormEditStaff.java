@@ -1,6 +1,5 @@
-package com.lnh.CourseRegistration.UIs.Screens;
+package com.lnh.CourseRegistration.UIs.Screens.Staff;
 
-import com.lnh.CourseRegistration.DAOs.AccountDAO;
 import com.lnh.CourseRegistration.DAOs.StaffDAO;
 import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.Entities.Staff;

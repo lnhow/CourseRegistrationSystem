@@ -1,4 +1,4 @@
-package com.lnh.CourseRegistration.UIs.Screens;
+package com.lnh.CourseRegistration.UIs.Screens.Staff;
 
 import com.lnh.CourseRegistration.DAOs.StaffDAO;
 import com.lnh.CourseRegistration.Entities.Staff;
@@ -204,7 +204,7 @@ public class StaffScreen extends JFrame implements ActionListener {
         long staffID = getSelectedStaffID();
 
         if (staffID == -1) {
-            DialogUtil.showWarningMessage("Vui lòng chọn một " + ObjectName + " để sửa");
+            DialogUtil.showWarningMessage("Vui lòng chọn một " + ObjectName + " để xóa");
             return;
         }
 

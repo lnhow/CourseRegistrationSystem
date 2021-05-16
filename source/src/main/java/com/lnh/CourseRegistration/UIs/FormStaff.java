@@ -3,7 +3,7 @@ package com.lnh.CourseRegistration.UIs;
 import com.lnh.CourseRegistration.DAOs.StaffDAO;
 import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.Entities.Staff;
-import com.lnh.CourseRegistration.UIs.Screens.StaffScreen;
+import com.lnh.CourseRegistration.UIs.Screens.Staff.StaffScreen;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
 
 import javax.swing.*;
