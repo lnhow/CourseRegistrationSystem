@@ -69,6 +69,7 @@ public class FormAccount {
         AppFrame = new JDialog(parentFrame,"Account Info", true);
         AppFrame.setContentPane(this.mainPanel);
         AppFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        AppFrame.setLocationRelativeTo(null);
         AppFrame.pack();
         AppFrame.setVisible(true);
     }

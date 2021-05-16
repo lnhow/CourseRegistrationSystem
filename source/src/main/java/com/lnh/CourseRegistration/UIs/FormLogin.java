@@ -18,26 +18,7 @@ public class FormLogin {
     private JCheckBox ckcShowPassword;
     private JLabel txtMessage;
 
-    public static void main(String[] args) {
-//        try {
-//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//        } catch (
-//                ClassNotFoundException | InstantiationException
-//                        | IllegalAccessException | UnsupportedLookAndFeelException e
-//        ) {
-//            e.printStackTrace();
-//        }
-
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new FormLogin();
-            }
-        });
-    }
-
-
-    FormLogin() {
+    public FormLogin() {
         initComponents();
         setVisible();
     }
@@ -46,6 +27,7 @@ public class FormLogin {
         AppFrame = new JFrame("Login");
         AppFrame.setContentPane(this.mainPanel);
         AppFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        AppFrame.setLocationRelativeTo(null);
 
         AppFrame.getRootPane().setDefaultButton(btnLogin);
 
