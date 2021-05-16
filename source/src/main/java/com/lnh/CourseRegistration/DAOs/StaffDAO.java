@@ -96,10 +96,38 @@ public class StaffDAO {
         try {
             String hql = "SELECT staff" +
                     " FROM Staff staff" +
-                    " WHERE staff.account.id = :staff_id";
+                    " WHERE staff.account.id = :acc_id";
 
             Query query = session.createQuery(hql);
-            query.setParameter("staff_id", accountID);
+            query.setParameter("acc_id", accountID);
+            List<Staff> list = query.list();
+
+            if (list != null && list.size() > 0) {
+                result = list.get(0);
+            }
+
+        } catch (HibernateException ex) {
+            HelperUtils.throwException(ex.getMessage());
+        } finally {
+            session.close();
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Staff getByStaffID(long staffID) throws Exception {
+        Staff result = null;
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+
+        try {
+            String hql = "SELECT staff" +
+                    " FROM Staff staff" +
+                    " WHERE staff.id = :staff_id";
+
+            Query query = session.createQuery(hql);
+            query.setParameter("staff_id", staffID);
             List<Staff> list = query.list();
 
             if (list != null && list.size() > 0) {

@@ -3,16 +3,13 @@ package com.lnh.CourseRegistration.UIs;
 import com.lnh.CourseRegistration.DAOs.StaffDAO;
 import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.Entities.Staff;
+import com.lnh.CourseRegistration.UIs.Screens.StaffScreen;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collections;
-import java.util.List;
 
 public class FormStaff implements ActionListener {
     private JFrame AppFrame;
@@ -27,17 +24,6 @@ public class FormStaff implements ActionListener {
     private JButton btnStudent;
     private JButton btnCourse;
     private JButton btnClass;
-    private JTable tableMain;
-    private JButton btnNew;
-    private JButton btnSearch;
-
-    private static final int SCREEN_STAFF = 0;
-    private static final int SCREEN_STUDENT = 1;
-    private static final int SCREEN_CLASS = 2;
-    private static final int SCREEN_COURSE = 3;
-    private DefaultTableModel tableModel;
-    private List<Staff> staffList;
-
 
     public FormStaff(Account account) {
         initComponents();
@@ -73,8 +59,6 @@ public class FormStaff implements ActionListener {
         btnStudent.addActionListener(this);
         btnClass.addActionListener(this);
         btnCourse.addActionListener(this);
-
-        btnNew.addActionListener(this);
     }
 
     @Override
@@ -93,8 +77,6 @@ public class FormStaff implements ActionListener {
 
         } else if (source == btnCourse) {
 
-        } else if (source == btnNew) {
-            openStaffEditDialog(null);
         }
     }
 
@@ -125,40 +107,6 @@ public class FormStaff implements ActionListener {
     }
 
     private void showStaffScreen() {
-        initStaffTable();
-        refreshStaffTable();
-    }
-
-    private void initStaffTable() {
-        Object[] columnLabels = {"ID", "Name", "Username"};
-        tableModel = new DefaultTableModel(columnLabels, 0) {
-            @Override
-            public boolean isCellEditable(int rowIdx, int colIdx) { return false; }
-        };
-        tableMain.setModel(tableModel);
-    }
-
-    private void refreshStaffTable() {
-        try {
-            staffList = StaffDAO.getAll();
-            tableModel.setRowCount(0);
-
-            for (Staff staff: staffList) {
-                Object[] rowData = {
-                        staff.getId(),
-                        staff.getName(),
-                        staff.getAccount().getUsername()
-                };
-                tableModel.addRow(rowData);
-            }
-        } catch (Exception ex) {
-            DialogUtil.showErrorMessage(ex.getMessage());
-        }
-    }
-
-    private void openStaffEditDialog(Staff aStaff) {
-        JDialog dialog = new JDialog(this.AppFrame);
-        new FormEditStaff(dialog, aStaff);
-        refreshStaffTable();
+        StaffScreen.getInstance().openInNewWindow();
     }
 }

@@ -1,4 +1,4 @@
-package com.lnh.CourseRegistration.UIs;
+package com.lnh.CourseRegistration.UIs.Screens;
 
 import com.lnh.CourseRegistration.DAOs.AccountDAO;
 import com.lnh.CourseRegistration.DAOs.StaffDAO;
@@ -10,8 +10,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class FormEditStaff {
-    private JDialog AppFrame;
+public class FormEditStaff extends JDialog {
     private JPanel mainPanel;
     private JTextField txtStaffID;
     private JTextField txtName;
@@ -19,25 +18,25 @@ public class FormEditStaff {
 
     private JButton btnSaveInfo;
     private JButton btnResetPwd;
-    private Staff currentStaff;
+    private JPanel panelBtns;
 
-    public FormEditStaff(JDialog parentFrame, Staff staffAccount) {
+    private StaffScreen parent;
+    private Staff currentStaff;
+    private boolean isNewScreen;
+
+    public FormEditStaff(JFrame parentFrame, Staff staffAccount) {
+        super(parentFrame, true);
         if (staffAccount == null) {
+            isNewScreen = true;
             initNewStaff();
         } else {
             currentStaff = staffAccount;
+            isNewScreen = false;
         }
 
         initComponents();
-        setVisible(parentFrame);
-    }
-
-    private void setVisible(JDialog parentFrame) {
-        AppFrame = new JDialog(parentFrame,"Staff Info", true);
-        AppFrame.setContentPane(this.mainPanel);
-        AppFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        AppFrame.pack();
-        AppFrame.setVisible(true);
+        parent = (StaffScreen) parentFrame;
+        initWindow();
     }
 
     private void initNewStaff() {
@@ -52,6 +51,14 @@ public class FormEditStaff {
     private void initComponents() {
         refreshTextFields();
 
+        if (isNewScreen) {
+            panelBtns.remove(btnResetPwd);
+            setTitle("Thêm Giáo vụ");
+        }
+        else {
+            setTitle("Sửa Giáo vụ");
+        }
+
         btnSaveInfo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -65,7 +72,14 @@ public class FormEditStaff {
                 resetPassword();
             }
         });
+    }
 
+    private void initWindow() {
+        setContentPane(this.mainPanel);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     private void refreshTextFields() {
@@ -74,15 +88,17 @@ public class FormEditStaff {
         txtUsername.setText(currentStaff.getAccount().getUsername());
     }
 
+
+    //Handler methods----------------------------------------------------------------------------
     private void saveInfo() {
         String name = txtName.getText();
         String username = txtUsername.getText();
 
         if (name.equals("")) {
-            DialogUtil.showWarningMessage("Name must not be empty");
+            DialogUtil.showWarningMessage("Họ tên không được để trống");
             return;
         } else if (username.equals("")) {
-            DialogUtil.showWarningMessage("Username must not be empty");
+            DialogUtil.showWarningMessage("Tên đăng nhập không được để trống");
             return;
         }
 
@@ -94,47 +110,44 @@ public class FormEditStaff {
         currentStaff.setName(name);
         currentStaff.getAccount().setUsername(username);
 
-        String msg = "Confirm changes to this account?";
-        int option = JOptionPane.showConfirmDialog(AppFrame, msg);
+        String msg = "Lưu thay đổi?";
+        int option = JOptionPane.showConfirmDialog(parent, msg);
 
         if (option == JOptionPane.YES_OPTION) {
-            saveToDB();
+            saveStaff();
         }
     }
 
     private void resetPassword() {
         currentStaff.getAccount().setPassword(currentStaff.getAccount().getUsername());
 
-        String msg = "Do you really want to reset this account's password?";
-        int option = JOptionPane.showConfirmDialog(AppFrame, msg);
+        String msg = "Reset mật khẩu tài khoản này?";
+        int option = JOptionPane.showConfirmDialog(parent, msg);
 
         if (option == JOptionPane.YES_OPTION) {
-            saveToDB();
+            saveStaff();
         }
     }
 
-    private void saveToDB() {
+    private void saveStaff() {
         try {
-            if (StaffDAO.getByAccountID(currentStaff.getId()) == null) {
-                StaffDAO.insert(currentStaff);
+            parent.saveStaff(currentStaff);
+
+            if (isNewScreen) {
+                initNewStaff();
             }
             else {
-                StaffDAO.update(currentStaff);
+                //Not new screen ==> staffId is not null
+                currentStaff = StaffDAO.getByStaffID(currentStaff.getId());
             }
-
-            //Update current account info cache with new id
-            Account currentAccount = currentStaff.getAccount();
-            currentAccount =
-                    AccountDAO.getByLoginInfo(currentAccount.getUsername(), currentAccount.getPassword());
-            currentStaff = StaffDAO.getByAccountID(currentAccount.getId());
 
             refreshTextFields();
         } catch (Exception ex) {
-            String errorMessage = "Unable to save. Error:\n"+ex.getMessage();
+            String errorMessage = "Lỗi không lưu được:\n"+ex.getMessage();
             DialogUtil.showErrorMessage(errorMessage);
             return;
         }
 
-        DialogUtil.showInfoMessage("Updated successfully");
+        DialogUtil.showInfoMessage("Lưu thành công!");
     }
 }
