@@ -69,8 +69,8 @@
                 </constraints>
                 <properties>
                   <model>
-                    <item value="Male"/>
-                    <item value="Female"/>
+                    <item value="Nam"/>
+                    <item value="Nữ"/>
                   </model>
                 </properties>
               </component>

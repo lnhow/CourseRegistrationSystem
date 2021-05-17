@@ -100,12 +100,7 @@ public class FormLogin {
 
         switch (account.getType()) {
             case Account.ACCOUNT_STUDENT:
-                String msg = "Login successfully"
-                        +"\nID: " + account.getId()
-                        +"\nUsername: " + account.getUsername()
-                        +"\nPassword: " + account.getPassword()
-                        +"\nAccountType: " + account.getType();
-                DialogUtil.showWarningMessage(msg);
+                new MenuStudent(account);
                 AppFrame.dispose();
                 break;
             case Account.ACCOUNT_STAFF:

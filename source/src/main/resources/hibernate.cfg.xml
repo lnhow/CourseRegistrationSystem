@@ -18,6 +18,7 @@
 
         <mapping class="com.lnh.CourseRegistration.Entities.Account"/>
         <mapping class="com.lnh.CourseRegistration.Entities.Staff"/>
+        <mapping class="com.lnh.CourseRegistration.Entities.Student"/>
         <mapping class="com.lnh.CourseRegistration.Entities.ClassInfo"/>
         <mapping class="com.lnh.CourseRegistration.Entities.Subject"/>
         <mapping class="com.lnh.CourseRegistration.Entities.Semester"/>
