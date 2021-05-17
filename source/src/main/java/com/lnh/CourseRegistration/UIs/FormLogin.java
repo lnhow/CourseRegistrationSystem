@@ -109,7 +109,7 @@ public class FormLogin {
                 AppFrame.dispose();
                 break;
             case Account.ACCOUNT_STAFF:
-                new FormStaff(account);
+                new MenuStaff(account);
                 AppFrame.dispose();
                 break;
             default:

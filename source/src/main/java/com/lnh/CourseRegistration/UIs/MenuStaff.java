@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class FormStaff implements ActionListener {
+public class MenuStaff implements ActionListener {
     private JFrame AppFrame;
     private Staff currentLoggedIn;
 
@@ -27,7 +27,7 @@ public class FormStaff implements ActionListener {
     private JButton btnClass;
     private JButton btnSubject;
 
-    public FormStaff(Account account) {
+    public MenuStaff(Account account) {
         initComponents();
         setVisible();
         fetchStaff(account);
