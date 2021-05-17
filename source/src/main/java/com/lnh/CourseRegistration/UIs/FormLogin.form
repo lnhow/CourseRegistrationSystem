@@ -39,7 +39,7 @@
               <enabled value="true"/>
               <font size="28" style="1"/>
               <foreground color="-16777216"/>
-              <text value="Login"/>
+              <text value="Đăng nhập"/>
             </properties>
           </component>
           <grid id="e4f95" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -71,7 +71,7 @@
                     <properties>
                       <font size="18" style="0"/>
                       <labelFor value="ccfe4"/>
-                      <text value="Username"/>
+                      <text value="Tài khoản"/>
                     </properties>
                   </component>
                   <component id="ccfe4" class="javax.swing.JTextField" binding="txtUsername">
@@ -91,7 +91,7 @@
                     <properties>
                       <enabled value="true"/>
                       <font size="18" style="0"/>
-                      <text value="Password"/>
+                      <text value="Mật khẩu"/>
                     </properties>
                   </component>
                   <vspacer id="d3701">
@@ -117,7 +117,7 @@
                       <background color="-1"/>
                       <enabled value="true"/>
                       <foreground color="-16777216"/>
-                      <text value="Show Password"/>
+                      <text value="Hiển thị mật khẩu"/>
                     </properties>
                   </component>
                 </children>
@@ -128,7 +128,7 @@
                 </constraints>
                 <properties>
                   <font size="16" style="0"/>
-                  <text value="Login"/>
+                  <text value="Đăng nhập"/>
                 </properties>
               </component>
               <vspacer id="72c98">

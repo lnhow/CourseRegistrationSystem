@@ -27,7 +27,7 @@
             </constraints>
             <properties>
               <font size="14"/>
-              <text value="Logout"/>
+              <text value="Đăng xuất"/>
             </properties>
           </component>
           <component id="c8e1a" class="javax.swing.JButton" binding="btnInfo">
@@ -36,7 +36,7 @@
             </constraints>
             <properties>
               <font size="14"/>
-              <text value="Account"/>
+              <text value="Tài khoản"/>
             </properties>
           </component>
           <component id="7ef98" class="javax.swing.JLabel" binding="txtName">

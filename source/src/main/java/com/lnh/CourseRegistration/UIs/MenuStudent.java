@@ -37,7 +37,7 @@ public class MenuStudent implements ActionListener {
     }
 
     private void setVisible() {
-        AppFrame = new JFrame("Menu Sinh viên");
+        AppFrame = new JFrame("Sinh viên");
         AppFrame.setContentPane(this.mainPanel);
         AppFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 

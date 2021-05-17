@@ -35,7 +35,7 @@ public class MenuStaff implements ActionListener {
         boolean isStaffNotExist = currentLoggedIn == null;
         if (isStaffNotExist) {
             DialogUtil.showErrorMessage(
-                    "Account invalid(ID: "+account.getId()+"). Please contact administrator."
+                    "Tài khoản không tồn tại(ID: "+account.getId()+"). Vui lòng liên hệ admin."
             );
             logOut();
             return;
@@ -45,7 +45,7 @@ public class MenuStaff implements ActionListener {
     }
 
     private void setVisible() {
-        AppFrame = new JFrame("Staff Dashboard");
+        AppFrame = new JFrame("Giáo vụ");
         AppFrame.setContentPane(this.mainPanel);
         AppFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -87,7 +87,7 @@ public class MenuStaff implements ActionListener {
 
     //Handling methods-------------------------------------------------------------------------------------------------
     private void setAccountText() {
-        txtStaff.setText("Welcome, " + currentLoggedIn.getName());
+        txtStaff.setText("Xin chào, " + currentLoggedIn.getName());
     }
 
     private void fetchStaff(Account account) {

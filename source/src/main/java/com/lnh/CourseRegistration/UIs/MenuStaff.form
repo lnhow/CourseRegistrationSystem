@@ -143,7 +143,7 @@
             </constraints>
             <properties>
               <font size="14"/>
-              <text value="Logout"/>
+              <text value="Đăng xuất"/>
             </properties>
           </component>
           <component id="f5c4a" class="javax.swing.JButton" binding="btnInfo">
@@ -152,7 +152,7 @@
             </constraints>
             <properties>
               <font size="14"/>
-              <text value="Account"/>
+              <text value="Tài khoản"/>
             </properties>
           </component>
           <component id="5f66f" class="javax.swing.JLabel" binding="txtStaff">

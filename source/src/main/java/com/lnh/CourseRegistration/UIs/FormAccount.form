@@ -20,7 +20,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Account Info"/>
+              <text value="Thông tin tài khoản"/>
             </properties>
           </component>
           <component id="aa63e" class="javax.swing.JLabel">
@@ -28,7 +28,7 @@
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Change Password"/>
+              <text value="Mật khẩu"/>
             </properties>
           </component>
           <grid id="f8795" binding="infoPanel" layout-manager="GridLayoutManager" row-count="3" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -44,7 +44,7 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Name"/>
+                  <text value="Họ tên"/>
                 </properties>
               </component>
               <component id="3b38b" class="javax.swing.JTextField" binding="txtName">
@@ -60,7 +60,7 @@
                   <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Save Info"/>
+                  <text value="Lưu thông tin"/>
                 </properties>
               </component>
               <component id="29fbe" class="javax.swing.JComboBox" binding="selectGender">
@@ -79,7 +79,7 @@
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Gender"/>
+                  <text value="Giới tính"/>
                 </properties>
               </component>
             </children>
@@ -97,7 +97,7 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Current Password"/>
+                  <text value="Mật khẩu hiện tại"/>
                 </properties>
               </component>
               <component id="d148c" class="javax.swing.JLabel">
@@ -105,7 +105,7 @@
                   <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="New Password"/>
+                  <text value="Mật khẩu mới"/>
                 </properties>
               </component>
               <component id="29d8a" class="javax.swing.JLabel">
@@ -113,7 +113,7 @@
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Confirm Password"/>
+                  <text value="Xác nhận mật khẩu"/>
                 </properties>
               </component>
               <component id="3025b" class="javax.swing.JPasswordField" binding="txtCurrentPwd">
@@ -145,7 +145,7 @@
                   <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Save Password"/>
+                  <text value="Đổi mật khẩu"/>
                 </properties>
               </component>
             </children>

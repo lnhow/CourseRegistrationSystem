@@ -24,7 +24,7 @@ public class FormLogin {
     }
 
     private void setVisible() {
-        AppFrame = new JFrame("Login");
+        AppFrame = new JFrame("Đăng nhập");
         AppFrame.setContentPane(this.mainPanel);
         AppFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         AppFrame.setLocationRelativeTo(null);
@@ -46,14 +46,14 @@ public class FormLogin {
                 String username = txtUsername.getText();
                 String password = new String(txtPassword.getPassword());
 
-                txtMessage.setText("Loading...");
+                txtMessage.setText("Đang tải...");
                 AppFrame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 if (username.equals("")) {
-                    txtMessage.setText("Please input username");
+                    txtMessage.setText("Tên đăng nhập không được trống");
                     AppFrame.setCursor(Cursor.getDefaultCursor());
                     return;
                 } else if(password.equals("")) {
-                    txtMessage.setText("Please input password");
+                    txtMessage.setText("Mật khẩu không được trống");
                     AppFrame.setCursor(Cursor.getDefaultCursor());
                     return;
                 }
@@ -61,7 +61,7 @@ public class FormLogin {
                 Account loginAccount = login(username,password);
                 txtMessage.setText("");
                 if (loginAccount == null) {
-                    txtMessage.setText("Wrong username or password");
+                    txtMessage.setText("Sai Tài khoản hay Mật khẩu");
                     AppFrame.setCursor(Cursor.getDefaultCursor());
                     return;
                 }
@@ -109,7 +109,7 @@ public class FormLogin {
                 break;
             default:
                 DialogUtil.showErrorMessage(
-                        "Account type invalid("+account.getId()+"). Please contact administrator."
+                        "Tài khoản không tồn tại(ID: "+account.getId()+"). Vui lòng liên hệ admin."
                 );
                 break;
         }
