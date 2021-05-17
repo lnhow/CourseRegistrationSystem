@@ -16,6 +16,13 @@ public class CustomComparator {
         }
     }
 
+    public static class ComparatorInt implements Comparator<Integer> {
+        @Override
+        public int compare(Integer o1, Integer o2) {
+            return o1.compareTo(o2);
+        }
+    }
+
     public static class ComparatorFloat implements Comparator<Float> {
         @Override
         public int compare(Float o1, Float o2) {

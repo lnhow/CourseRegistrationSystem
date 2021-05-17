@@ -8,7 +8,7 @@ public class Subject {
     @Id
     @Column(name = "SubjectID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     @Column(name = "SubjectShort", length = 10)
     private String shortName;
@@ -17,19 +17,19 @@ public class Subject {
     private String subjectName;
 
     @Column(name = "NumCredit")
-    private Integer numCredit;
+    private int numCredit;
 
     public Subject() {
     }
 
-    public Subject(Integer id, String shortName, String subjectName, Integer numCredit) {
+    public Subject(int id, String shortName, String subjectName, int numCredit) {
         this.id = id;
         this.shortName = shortName;
         this.subjectName = subjectName;
         this.numCredit = numCredit;
     }
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 
@@ -41,7 +41,7 @@ public class Subject {
         return subjectName;
     }
 
-    public Integer getNumCredit() {
+    public int getNumCredit() {
         return numCredit;
     }
 
@@ -54,7 +54,7 @@ public class Subject {
         this.subjectName = subjectName;
     }
 
-    public void setNumCredit(Integer numCredit) {
+    public void setNumCredit(int numCredit) {
         this.numCredit = numCredit;
     }
 }

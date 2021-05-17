@@ -4,6 +4,7 @@ import com.lnh.CourseRegistration.DAOs.StaffDAO;
 import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.Entities.Staff;
 import com.lnh.CourseRegistration.UIs.Screens.Staff.StaffScreen;
+import com.lnh.CourseRegistration.UIs.Screens.Subject.SubjectScreen;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
 
 import javax.swing.*;
@@ -24,6 +25,7 @@ public class FormStaff implements ActionListener {
     private JButton btnStudent;
     private JButton btnCourse;
     private JButton btnClass;
+    private JButton btnSubject;
 
     public FormStaff(Account account) {
         initComponents();
@@ -59,6 +61,7 @@ public class FormStaff implements ActionListener {
         btnStudent.addActionListener(this);
         btnClass.addActionListener(this);
         btnCourse.addActionListener(this);
+        btnSubject.addActionListener(this);
     }
 
     @Override
@@ -71,6 +74,8 @@ public class FormStaff implements ActionListener {
             logOut();
         } else if (source == btnStaff) {
             showStaffScreen();
+        } else if (source == btnSubject) {
+            showSubjectScreen();
         } else if (source == btnStudent) {
 
         } else if (source == btnClass) {
@@ -108,5 +113,9 @@ public class FormStaff implements ActionListener {
 
     private void showStaffScreen() {
         StaffScreen.getInstance().openInNewWindow();
+    }
+
+    private void showSubjectScreen() {
+        SubjectScreen.getInstance().openInNewWindow();
     }
 }

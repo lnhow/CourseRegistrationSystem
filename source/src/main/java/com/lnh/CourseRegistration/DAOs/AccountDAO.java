@@ -1,7 +1,6 @@
 package com.lnh.CourseRegistration.DAOs;
 
 import com.lnh.CourseRegistration.Entities.Account;
-import com.lnh.CourseRegistration.Entities.Student;
 import com.lnh.CourseRegistration.Utils.HibernateUtil;
 import com.lnh.CourseRegistration.Utils.HelperUtils;
 
