@@ -1,5 +1,6 @@
 package com.lnh.CourseRegistration.UIs.Screens.Semester;
 
+import com.lnh.CourseRegistration.Controllers.SemesterController;
 import com.lnh.CourseRegistration.DAOs.SemesterDAO;
 import com.lnh.CourseRegistration.Entities.Semester;
 import com.lnh.CourseRegistration.Utils.CustomComparator;
@@ -20,9 +21,10 @@ public class SemesterScreen extends JFrame implements ActionListener {
     private JButton btnDelete;
     private JButton btnEdit;
     private JButton btnNew;
+    private JLabel txtCurrentSemester;
 
     private JPopupMenu popupMenu;
-    private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem;
+    private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, setCurrentSemesterMenuItem;
 
     private static JFrame AppFrame;
     private DefaultTableModel tableModel;
@@ -47,9 +49,10 @@ public class SemesterScreen extends JFrame implements ActionListener {
     }
 
     private SemesterScreen() {
+        refreshTxtCurrentSemester();    //Display current semester text
         initTable();
         initBtnListeners();
-        refreshTable();
+        refreshData();
     }
 
     public void openInNewWindow() {
@@ -112,17 +115,21 @@ public class SemesterScreen extends JFrame implements ActionListener {
         newMenuItem = new JMenuItem("Thêm mới");
         editMenuItem = new JMenuItem("Chỉnh sửa");
         deleteMenuItem = new JMenuItem("Xóa");
+        setCurrentSemesterMenuItem = new JMenuItem("Đặt làm Học Kì hiện tại");
 
         refreshMenuItem.addActionListener(this);
         newMenuItem.addActionListener(this);
         editMenuItem.addActionListener(this);
         deleteMenuItem.addActionListener(this);
+        setCurrentSemesterMenuItem.addActionListener(this);
 
-        popupMenu.add(refreshMenuItem);
-        popupMenu.addSeparator();
         popupMenu.add(newMenuItem);
         popupMenu.add(editMenuItem);
         popupMenu.add(deleteMenuItem);
+        popupMenu.addSeparator();
+        popupMenu.add(setCurrentSemesterMenuItem);
+        popupMenu.add(refreshMenuItem);
+
         MouseAdapter mouseAdapter = new MouseAdapter() {
             public void mouseReleased(MouseEvent me) {
                 if(me.isPopupTrigger())
@@ -155,15 +162,26 @@ public class SemesterScreen extends JFrame implements ActionListener {
         } else if (source == btnDelete || source == deleteMenuItem) {
             deleteSelectedSemester();
         } else if (source == refreshMenuItem) {
-            refreshTable();
+            refreshData();
+        } else if (source == setCurrentSemesterMenuItem) {
+            setCurrentSemesterAction();
         }
     }
 
     //Handler method---------------------------------------------
-    private void refreshTable() {
+    /**
+     * Refresh table with data from Database
+     */
+    private void refreshData() {
         try {
             List<Semester> SemesterList = SemesterDAO.getAll();
             setTableData(SemesterList);
+
+            Semester currentSemester = SemesterController.getCurrentSemester();
+            if (currentSemester != null) {
+                Semester updatedCurrentSemester = SemesterDAO.getBySemesterID(currentSemester.getId());
+                this.setCurrentSemester(updatedCurrentSemester);
+            }
         } catch (Exception ex) {
             String msg = "Lỗi không lấy được danh sách " + ObjectName +"\n";
             DialogUtil.showErrorMessage(msg + ex.getMessage());
@@ -224,12 +242,19 @@ public class SemesterScreen extends JFrame implements ActionListener {
         if (option == JOptionPane.YES_OPTION) {
             try {
                 SemesterDAO.delete(semesterID);
+
+                //If delete semester successfully & the deleted semester is current semester
+                //Then set current semester to null
+                Semester currentSemester = SemesterController.getCurrentSemester();
+                if (currentSemester != null && currentSemester.getId() == semesterID) {
+                    this.setCurrentSemester(null);
+                }
             } catch (Exception ex) {
                 DialogUtil.showErrorMessage("Lỗi xóa thông tin "+ ObjectName +".\n" + ex.getMessage());
             }
         }
 
-        refreshTable();
+        refreshData();
     }
 
     /**
@@ -239,7 +264,43 @@ public class SemesterScreen extends JFrame implements ActionListener {
     private void openSemesterEditDialog(Semester aSemester) {
         //Dialog so that it block Semester screen
         new FormEditSemester(this, aSemester);
-        refreshTable();
+        refreshData();
+    }
+
+    /**
+     * Action performer for set Current Semester action listeners
+     */
+    private void setCurrentSemesterAction() {
+        try {
+            Semester selected = fromSelectedTableRow();
+
+            if (selected == null) {
+                DialogUtil.showWarningMessage("Vui lòng chọn một "+ ObjectName + " để sửa");
+                return;
+            }
+
+            this.setCurrentSemester(selected);
+        } catch (Exception ex) {
+            DialogUtil.showErrorMessage("Không lấy được thông tin"+ ObjectName +". Lỗi:\n" + ex.getMessage());
+        }
+    }
+
+    /**
+     * Wrapper function to set Current Semester to data & update text
+     * @param semester semester to set to current semester
+     */
+    private void setCurrentSemester(Semester semester) {
+        SemesterController.setCurrentSemester(semester);
+        this.refreshTxtCurrentSemester();
+    }
+
+    private void refreshTxtCurrentSemester() {
+        Semester currentSemester = SemesterController.getCurrentSemester();
+        String msg = "Học kì hiện tại: "
+                + ((currentSemester == null) ?
+                    "Chưa chọn":currentSemester.getSemesterName() + " Năm " + currentSemester.getSemesterYear()
+                );
+        txtCurrentSemester.setText(msg);
     }
 
 
@@ -280,18 +341,25 @@ public class SemesterScreen extends JFrame implements ActionListener {
 
     //Methods use by children-----------------------------------------------
     /**
-     * Save (Insert/Update) Semester to Database
-     * @param Semester Semester to be save to Database
+     * Save (Insert/Update) semester to Database
+     * @param semester semester to be save to Database
      * @throws Exception If insert/update fails
      */
-    public void saveSemester(Semester Semester) throws Exception {
-        if (SemesterDAO.getBySemesterID(Semester.getId()) == null) {
-            SemesterDAO.insert(Semester);
+    public void saveSemester(Semester semester) throws Exception {
+        if (SemesterDAO.getBySemesterID(semester.getId()) == null) {
+            SemesterDAO.insert(semester);
         }
         else {
-            SemesterDAO.update(Semester);
+            SemesterDAO.update(semester);
+
+            //If update semester successfully & the updated semester is current semester
+            //Then set current semester to it
+            Semester currentSemester = SemesterController.getCurrentSemester();
+            if (currentSemester != null && currentSemester.getId() == semester.getId()) {
+                this.setCurrentSemester(semester);
+            }
         }
 
-        refreshTable();
+        refreshData();
     }
 }
