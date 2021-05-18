@@ -71,6 +71,7 @@ public class FormEditSubject extends JDialog {
 
     private void initWindow() {
         setContentPane(this.mainPanel);
+        getRootPane().setDefaultButton(btnSaveInfo);    //Allow btn to trigger if hit Enter
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);

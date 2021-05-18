@@ -14,6 +14,7 @@ public class ClassInfo {
     private String className;
 
     public ClassInfo() {
+        id = 0; //Wrapper Integer Class do not have no args constructor
     }
 
     public ClassInfo(int id, String className) {

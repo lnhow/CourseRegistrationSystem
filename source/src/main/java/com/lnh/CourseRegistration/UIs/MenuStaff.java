@@ -3,6 +3,7 @@ package com.lnh.CourseRegistration.UIs;
 import com.lnh.CourseRegistration.DAOs.StaffDAO;
 import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.Entities.Staff;
+import com.lnh.CourseRegistration.UIs.Screens.ClassInfo.ClassInfoScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Semester.SemesterScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Staff.StaffScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Subject.SubjectScreen;
@@ -81,9 +82,9 @@ public class MenuStaff implements ActionListener {
             showSubjectScreen();
         } else if (source == btnSemester) {
             showSemesterScreen();
-        } else if (source == btnStudent) {
-
         } else if (source == btnClass) {
+            showClassInfoScreen();
+        } else if (source == btnStudent) {
 
         } else if (source == btnCourse) {
 
@@ -126,5 +127,9 @@ public class MenuStaff implements ActionListener {
 
     private void showSemesterScreen() {
         SemesterScreen.getInstance().openInNewWindow();
+    }
+
+    private void showClassInfoScreen() {
+        ClassInfoScreen.getInstance().openInNewWindow();
     }
 }
