@@ -4,6 +4,7 @@ import com.lnh.CourseRegistration.DAOs.StaffDAO;
 import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.Entities.Staff;
 import com.lnh.CourseRegistration.UIs.Screens.ClassInfo.ClassInfoScreen;
+import com.lnh.CourseRegistration.UIs.Screens.RegistrationSession.SessionScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Semester.SemesterScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Staff.StaffScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Subject.SubjectScreen;
@@ -29,6 +30,7 @@ public class MenuStaff implements ActionListener {
     private JButton btnClass;
     private JButton btnSubject;
     private JButton btnSemester;
+    private JButton btnRegisterSession;
 
     public MenuStaff(Account account) {
         initComponents();
@@ -66,6 +68,7 @@ public class MenuStaff implements ActionListener {
         btnStudent.addActionListener(this);
         btnClass.addActionListener(this);
         btnCourse.addActionListener(this);
+        btnRegisterSession.addActionListener(this);
     }
 
     @Override
@@ -84,6 +87,8 @@ public class MenuStaff implements ActionListener {
             showSemesterScreen();
         } else if (source == btnClass) {
             showClassInfoScreen();
+        } else if (source == btnRegisterSession) {
+            showSessionScreen();
         } else if (source == btnStudent) {
 
         } else if (source == btnCourse) {
@@ -131,5 +136,9 @@ public class MenuStaff implements ActionListener {
 
     private void showClassInfoScreen() {
         ClassInfoScreen.getInstance().openInNewWindow();
+    }
+
+    private void showSessionScreen() {
+        SessionScreen.getInstance().openInNewWindow();
     }
 }
