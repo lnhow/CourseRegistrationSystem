@@ -8,10 +8,7 @@ import com.lnh.CourseRegistration.Utils.DialogUtil;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +32,8 @@ public class SemesterScreen extends JFrame implements ActionListener {
     private static final int COLUMN_ID = 0;
     private static final int COLUMN_NAME = 1;
     private static final int COLUMN_YEAR = 2;
-    private static final int COLUMN_DATE_START = 2;
-    private static final int COLUMN_DATE_END = 3;
+    private static final int COLUMN_DATE_START = 3;
+    private static final int COLUMN_DATE_END = 4;
     Object[] columnLabels = {"ID", "Học kì", "Năm", "Ngày bắt đầu", "Ngày kết thúc"};
     private static final int[] DISABLE_SORT_COLUMN_INDEXES = {COLUMN_NAME, COLUMN_DATE_START, COLUMN_DATE_END};
 
@@ -56,10 +53,23 @@ public class SemesterScreen extends JFrame implements ActionListener {
     }
 
     public void openInNewWindow() {
+        //Allow only one screen instance at a time
         if (AppFrame == null) {
             AppFrame = new JFrame("Quản lý " + ObjectName);
             AppFrame.setContentPane(this.mainPanel);
             AppFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            AppFrame.addWindowListener(new WindowListener() {
+                @Override public void windowClosed(WindowEvent e) {
+                    instance = null;    //Free up space used by Screen instance
+                }
+                //Required methods
+                @Override public void windowOpened(WindowEvent e) {}
+                @Override public void windowClosing(WindowEvent e) {}
+                @Override public void windowIconified(WindowEvent e) {}
+                @Override public void windowDeiconified(WindowEvent e) {}
+                @Override public void windowActivated(WindowEvent e) {}
+                @Override public void windowDeactivated(WindowEvent e) {}
+            });
             AppFrame.pack();
             AppFrame.setLocationRelativeTo(null);
         }
@@ -84,7 +94,6 @@ public class SemesterScreen extends JFrame implements ActionListener {
         }
 
         sorter.setComparator(COLUMN_ID, new CustomComparator.ComparatorInt());
-        sorter.setComparator(COLUMN_NAME, new CustomComparator.ComparatorString());
         sorter.setComparator(COLUMN_YEAR, new CustomComparator.ComparatorInt());
 
         //Sort by ID default
@@ -265,6 +274,7 @@ public class SemesterScreen extends JFrame implements ActionListener {
 
         return id;
     }
+
 
 
 

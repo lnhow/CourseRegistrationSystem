@@ -9,10 +9,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,10 +53,23 @@ public class SubjectScreen extends JFrame implements ActionListener {
     }
 
     public void openInNewWindow() {
+        //Allow only one screen instance at a time
         if (AppFrame == null) {
             AppFrame = new JFrame("Quản lý " + ObjectName);
             AppFrame.setContentPane(this.mainPanel);
             AppFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            AppFrame.addWindowListener(new WindowListener() {
+                @Override public void windowClosed(WindowEvent e) {
+                    instance = null;    //Free up space used by Screen instance
+                }
+                //Required methods
+                @Override public void windowOpened(WindowEvent e) {}
+                @Override public void windowClosing(WindowEvent e) {}
+                @Override public void windowIconified(WindowEvent e) {}
+                @Override public void windowDeiconified(WindowEvent e) {}
+                @Override public void windowActivated(WindowEvent e) {}
+                @Override public void windowDeactivated(WindowEvent e) {}
+            });
             AppFrame.pack();
             AppFrame.setLocationRelativeTo(null);
         }
