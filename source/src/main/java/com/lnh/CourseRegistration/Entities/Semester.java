@@ -24,6 +24,7 @@ public class Semester {
     private Date semesterEnd;
 
     public Semester() {
+        id = 0; //Wrapper Integer Class do not have no args constructor
     }
 
     public Semester(int id, String semesterName, Integer semesterYear, Date semesterStart, Date semesterEnd) {

@@ -3,6 +3,7 @@ package com.lnh.CourseRegistration.UIs;
 import com.lnh.CourseRegistration.DAOs.StaffDAO;
 import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.Entities.Staff;
+import com.lnh.CourseRegistration.UIs.Screens.Semester.SemesterScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Staff.StaffScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Subject.SubjectScreen;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
@@ -26,6 +27,7 @@ public class MenuStaff implements ActionListener {
     private JButton btnCourse;
     private JButton btnClass;
     private JButton btnSubject;
+    private JButton btnSemester;
 
     public MenuStaff(Account account) {
         initComponents();
@@ -58,10 +60,11 @@ public class MenuStaff implements ActionListener {
         btnInfo.addActionListener(this);
         btnLogOut.addActionListener(this);
         btnStaff.addActionListener(this);
+        btnSubject.addActionListener(this);
+        btnSemester.addActionListener(this);
         btnStudent.addActionListener(this);
         btnClass.addActionListener(this);
         btnCourse.addActionListener(this);
-        btnSubject.addActionListener(this);
     }
 
     @Override
@@ -76,6 +79,8 @@ public class MenuStaff implements ActionListener {
             showStaffScreen();
         } else if (source == btnSubject) {
             showSubjectScreen();
+        } else if (source == btnSemester) {
+            showSemesterScreen();
         } else if (source == btnStudent) {
 
         } else if (source == btnClass) {
@@ -117,5 +122,9 @@ public class MenuStaff implements ActionListener {
 
     private void showSubjectScreen() {
         SubjectScreen.getInstance().openInNewWindow();
+    }
+
+    private void showSemesterScreen() {
+        SemesterScreen.getInstance().openInNewWindow();
     }
 }
