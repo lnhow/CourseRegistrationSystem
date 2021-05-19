@@ -1,5 +1,7 @@
 package com.lnh.CourseRegistration.UIs.Screens.Semester;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DateTimePicker;
 import com.lnh.CourseRegistration.DAOs.SemesterDAO;
 import com.lnh.CourseRegistration.Entities.Semester;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
@@ -10,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.Date;
 
@@ -19,12 +23,10 @@ public class FormEditSemester extends JDialog {
     private JTextField txtID;
     private JButton btnSave;
     private JPanel holderYear;
-    private JPanel holderStartDate;
-    private JPanel holderEndDate;
+    private DatePicker pickerStart;
+    private DatePicker pickerEnd;
 
-    //Date - Year pickers
-    private JDateChooser chooserDateStart;
-    private JDateChooser chooserDateEnd;
+    //Year pickers
     private JYearChooser chooserYear;
 
     private SemesterScreen parent;
@@ -55,17 +57,9 @@ public class FormEditSemester extends JDialog {
     }
 
     private void initComponents() {
-        chooserDateStart = new JDateChooser();
-        chooserDateEnd = new JDateChooser();
         chooserYear = new JYearChooser();
 
-        //Capital MM is Month while mm is minute in Java
-        chooserDateStart.setDateFormatString("dd/MM/yyyy");
-        chooserDateEnd.setDateFormatString("dd/MM/yyyy");
-
         holderYear.add(chooserYear, BorderLayout.CENTER);
-        holderStartDate.add(chooserDateStart, BorderLayout.CENTER);
-        holderEndDate.add(chooserDateEnd, BorderLayout.CENTER);
         refreshTextFields();
 
         if (isNewScreen) {
@@ -96,8 +90,9 @@ public class FormEditSemester extends JDialog {
         txtID.setText(Integer.toString(currentSemester.getId()));
         txtName.setText(currentSemester.getSemesterName());
         chooserYear.setYear(currentSemester.getSemesterYear());
-        chooserDateStart.setDate(currentSemester.getSemesterStart());
-        chooserDateEnd.setDate(currentSemester.getSemesterEnd());
+
+        pickerStart.setDate(new java.sql.Date(currentSemester.getSemesterStart().getTime()).toLocalDate());
+        pickerEnd.setDate(new java.sql.Date(currentSemester.getSemesterEnd().getTime()).toLocalDate());
     }
 
 
@@ -105,18 +100,26 @@ public class FormEditSemester extends JDialog {
     private void saveInfo() {
         String name = txtName.getText();
         int year = chooserYear.getYear();
-        Date startDate = chooserDateStart.getDate();
-        Date endDate = chooserDateEnd.getDate();
 
-        if (name.equals("")) {
-            DialogUtil.showWarningMessage("Họ tên không được để trống");
+
+        LocalDate dateStart = pickerStart.getDate();
+        LocalDate dateEnd = pickerEnd.getDate();
+
+        if (dateStart == null) {
+            DialogUtil.showWarningMessage("Ngày bắt đầu không được để trống");
+            return;
+        } else if (dateEnd == null) {
+            DialogUtil.showWarningMessage("Ngày kết thúc không được để trống");
+            return;
+        } else if (name.equals("")) {
+            DialogUtil.showWarningMessage("tên Học kỳ không được để trống");
             return;
         }
 
         currentSemester.setSemesterName(name);
         currentSemester.setSemesterYear(year);
-        currentSemester.setSemesterStart(startDate);
-        currentSemester.setSemesterEnd(endDate);
+        currentSemester.setSemesterStart(java.sql.Date.valueOf(dateStart));
+        currentSemester.setSemesterEnd(java.sql.Date.valueOf(dateEnd));
 
         String msg = "Lưu thay đổi?";
         int option = JOptionPane.showConfirmDialog(parent, msg);

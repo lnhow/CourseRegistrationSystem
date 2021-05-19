@@ -1,5 +1,6 @@
 package com.lnh.CourseRegistration.UIs.Screens.RegistrationSession;
 
+import com.github.lgooddatepicker.components.DateTimePicker;
 import com.lnh.CourseRegistration.Controllers.SemesterController;
 import com.lnh.CourseRegistration.DAOs.RegistrationSessionDAO;
 import com.lnh.CourseRegistration.Entities.RegistrationSession;
@@ -11,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 //TODO: Add Time picker
@@ -18,14 +21,10 @@ public class FormEditSession extends JDialog {
     private JPanel mainPanel;
     private JTextField txtName;
     private JTextField txtID;
-    private JPanel holderStart;
-    private JPanel holderEnd;
     private JButton btnSave;
     private JTextField txtYear;
-
-    //Date - Year pickers
-    private JDateChooser chooserDateStart;
-    private JDateChooser chooserDateEnd;
+    private DateTimePicker pickerStart;
+    private DateTimePicker pickerEnd;
 
     private SessionScreen parent;
     private RegistrationSession currentSession;   //Current Session to edit
@@ -56,20 +55,12 @@ public class FormEditSession extends JDialog {
     private void initNewSession() {
         Semester current = SemesterController.getCurrentSemester();
         currentSession = new RegistrationSession(current, null);
-        currentSession.setSessionStart(new Date());
-        currentSession.setSessionEnd(new Date());
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        currentSession.setSessionStart(currentTime);
+        currentSession.setSessionEnd(currentTime);
     }
 
     private void initComponents() {
-        chooserDateStart = new JDateChooser();
-        chooserDateEnd = new JDateChooser();
-
-        //Capital MM is Month while mm is minute in Java
-        chooserDateStart.setDateFormatString("dd/MM/yyyy");
-        chooserDateEnd.setDateFormatString("dd/MM/yyyy");
-        
-        holderStart.add(chooserDateStart, BorderLayout.CENTER);
-        holderEnd.add(chooserDateEnd, BorderLayout.CENTER);
         refreshTextFields();
 
         if (isNewScreen) {
@@ -100,20 +91,21 @@ public class FormEditSession extends JDialog {
         txtID.setText(Long.toString(currentSession.getId()));
         txtName.setText(currentSession.getSemester().getSemesterName());
         txtYear.setText(Integer.toString(currentSession.getSemester().getSemesterYear()));
-        chooserDateStart.setDate(currentSession.getSessionStart());
-        chooserDateEnd.setDate(currentSession.getSessionEnd());
+        pickerStart.setDateTimeStrict(currentSession.getSessionStart().toLocalDateTime());
+        pickerEnd.setDateTimeStrict(currentSession.getSessionEnd().toLocalDateTime());
     }
 
 
     //Handler methods----------------------------------------------------------------------------
     private void saveInfo() {
-        String name = txtName.getText();
-        Date startDate = chooserDateStart.getDate();
-        Date endDate = chooserDateEnd.getDate();
-        Semester current = SemesterController.getCurrentSemester();
+        LocalDateTime timeStart = pickerStart.getDateTimeStrict();
+        LocalDateTime timeEnd = pickerEnd.getDateTimeStrict();
 
-        if (name.equals("")) {
-            DialogUtil.showWarningMessage("Họ tên không được để trống");
+        if (timeStart == null) {
+            DialogUtil.showWarningMessage("Thời gian bắt đầu không được để trống");
+            return;
+        }  else if (timeEnd == null) {
+            DialogUtil.showWarningMessage("Thời gian kết thúc không được để trống");
             return;
         }
 

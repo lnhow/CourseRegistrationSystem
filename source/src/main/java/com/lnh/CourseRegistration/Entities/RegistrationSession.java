@@ -2,7 +2,6 @@ package com.lnh.CourseRegistration.Entities;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Date;
 
 @Entity
 @Table(name = "RegistrationSession")
@@ -17,10 +16,10 @@ public class RegistrationSession {
     private Semester semester;
 
     @Column(name = "SessionStart")
-    private Date sessionStart;
+    private Timestamp sessionStart;
 
     @Column(name = "SessionEnd")
-    private Date sessionEnd;
+    private Timestamp sessionEnd;
 
     @Column(name = "CreatedAt")
     private Timestamp createdAt;
@@ -57,11 +56,11 @@ public class RegistrationSession {
         return semester;
     }
 
-    public Date getSessionStart() {
+    public Timestamp getSessionStart() {
         return sessionStart;
     }
 
-    public Date getSessionEnd() {
+    public Timestamp getSessionEnd() {
         return sessionEnd;
     }
 
@@ -73,11 +72,11 @@ public class RegistrationSession {
         return createdBy;
     }
 
-    public void setSessionStart(Date sessionStart) {
+    public void setSessionStart(Timestamp sessionStart) {
         this.sessionStart = sessionStart;
     }
 
-    public void setSessionEnd(Date sessionEnd) {
+    public void setSessionEnd(Timestamp sessionEnd) {
         this.sessionEnd = sessionEnd;
     }
 
