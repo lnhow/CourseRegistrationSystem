@@ -6,6 +6,7 @@ import com.lnh.CourseRegistration.Entities.RegistrationSession;
 import com.lnh.CourseRegistration.Entities.Semester;
 import com.lnh.CourseRegistration.Utils.CustomComparator;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
+import com.lnh.CourseRegistration.Utils.HelperUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -317,6 +318,11 @@ public class SessionScreen extends JFrame implements ActionListener {
      * @throws Exception If insert/update fails
      */
     public void saveSession(RegistrationSession session) throws Exception {
+        if (session == null) {
+            HelperUtils.throwException("Session is null");
+            return;
+        }
+
         if (RegistrationSessionDAO.getBySessionID(session.getId()) == null) {
             RegistrationSessionDAO.insert(session);
         }

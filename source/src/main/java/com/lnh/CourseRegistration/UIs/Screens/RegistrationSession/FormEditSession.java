@@ -1,6 +1,7 @@
 package com.lnh.CourseRegistration.UIs.Screens.RegistrationSession;
 
 import com.github.lgooddatepicker.components.DateTimePicker;
+import com.lnh.CourseRegistration.Controllers.LoginController;
 import com.lnh.CourseRegistration.Controllers.SemesterController;
 import com.lnh.CourseRegistration.DAOs.RegistrationSessionDAO;
 import com.lnh.CourseRegistration.Entities.RegistrationSession;
@@ -54,7 +55,7 @@ public class FormEditSession extends JDialog {
 
     private void initNewSession() {
         Semester current = SemesterController.getCurrentSemester();
-        currentSession = new RegistrationSession(current, null);
+        currentSession = new RegistrationSession(current, LoginController.getLogInStaff());
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         currentSession.setSessionStart(currentTime);
         currentSession.setSessionEnd(currentTime);

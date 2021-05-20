@@ -1,5 +1,8 @@
 package com.lnh.CourseRegistration.Entities;
 
+import net.bytebuddy.implementation.bind.annotation.Default;
+import org.hibernate.annotations.ColumnDefault;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 
@@ -21,7 +24,7 @@ public class RegistrationSession {
     @Column(name = "SessionEnd")
     private Timestamp sessionEnd;
 
-    @Column(name = "CreatedAt")
+    @Column(name = "CreatedAt", insertable = false)
     private Timestamp createdAt;
 
     @OneToOne
