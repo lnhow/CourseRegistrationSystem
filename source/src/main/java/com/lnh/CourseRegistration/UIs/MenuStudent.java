@@ -1,9 +1,7 @@
 package com.lnh.CourseRegistration.UIs;
 
-import com.lnh.CourseRegistration.DAOs.StaffDAO;
-import com.lnh.CourseRegistration.DAOs.StudentDAO;
+import com.lnh.CourseRegistration.Controllers.LoginController;
 import com.lnh.CourseRegistration.Entities.Account;
-import com.lnh.CourseRegistration.Entities.Student;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
 
 import javax.swing.*;
@@ -17,19 +15,16 @@ public class MenuStudent implements ActionListener {
     private JLabel txtName;
 
     private JFrame AppFrame;
-    private Student currentLoggedIn;
 
-    public MenuStudent(Account account) {
+    public MenuStudent() {
         initComponents();
         setVisible();
-        fetchStudent(account);
 
-        boolean isStudentNotExist = currentLoggedIn == null;
+        boolean isStudentNotExist =
+                LoginController.getLogInAccountType() != Account.ACCOUNT_STUDENT
+                || LoginController.getLogInStudent() == null;
         if (isStudentNotExist) {
-            DialogUtil.showErrorMessage(
-                    "Tài khoản không tồn tại(ID: "+account.getId()+"). Vui lòng liên hệ admin."
-            );
-            logOut();
+            DialogUtil.showErrorMessage("Lỗi đăng nhập");
             return;
         }
 
@@ -64,27 +59,18 @@ public class MenuStudent implements ActionListener {
 
     //Handling methods-------------------------------------------------------------------------------------------------
     private void setAccountText() {
-        txtName.setText("Xin chào, " + currentLoggedIn.getName());
-    }
-
-    private void fetchStudent(Account account) {
-        try {
-            currentLoggedIn = StudentDAO.getByAccountID(account.getId());
-        } catch (Exception exception) {
-            DialogUtil.showErrorMessage(exception.getMessage());
-        }
+        txtName.setText("Xin chào, " + LoginController.getLogInStudent().getName());
     }
 
     private void logOut() {
-        currentLoggedIn = null;
+        LoginController.logOut();
         new FormLogin();
         AppFrame.dispose();
     }
 
     private void openAccountForm() {
         JDialog dialog = new JDialog(this.AppFrame);
-        new FormAccount(dialog, currentLoggedIn);
-        fetchStudent(currentLoggedIn.getAccount());
+        new FormAccount(dialog);
         setAccountText();
     }
 }

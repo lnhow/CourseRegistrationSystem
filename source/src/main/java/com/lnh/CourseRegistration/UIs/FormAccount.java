@@ -1,11 +1,11 @@
 package com.lnh.CourseRegistration.UIs;
 
-import com.lnh.CourseRegistration.DAOs.AccountDAO;
-import com.lnh.CourseRegistration.DAOs.StaffDAO;
-import com.lnh.CourseRegistration.DAOs.StudentDAO;
+import com.lnh.CourseRegistration.Controllers.LoginController;
+import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.Entities.Staff;
 import com.lnh.CourseRegistration.Entities.Student;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
+import com.lnh.CourseRegistration.Utils.HelperUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,19 +30,46 @@ public class FormAccount {
     private Student currentStudentAccount;
 
     //STAFF & STUDENT BOTH USE THESE------------------------------------------------------------------------------------
-    private void initComponentsForStaff() {
-        txtName.setText(currentStaffAccount.getName());
-        //Staff do not have these info
-        infoPanel.remove(lblGender);
-        infoPanel.remove(selectGender);
-
-        btnSaveInfo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateStaffInfo();
+    FormAccount(JDialog parentFrame) {
+        try {
+            LoginController.refreshLoggedInAccount();
+            int accountType = LoginController.getLogInAccountType();
+            switch (accountType) {
+                case Account.ACCOUNT_STAFF:
+                    currentStaffAccount = LoginController.getLogInStaff();
+                    if (currentStaffAccount == null) {
+                        HelperUtils.throwException("Không lấy được tài khoản");
+                    }
+                    initComponentsForStaff();
+                    break;
+                case Account.ACCOUNT_STUDENT:
+                    currentStudentAccount = LoginController.getLogInStudent();
+                    if (currentStudentAccount == null) {
+                        HelperUtils.throwException("Không lấy được tài khoản");
+                    }
+                    initComponentsForStudent();
+                    break;
+                default:
+                    HelperUtils.throwException("Loại tài khoản không hợp lệ");
             }
-        });
+        } catch (Exception ex) {
+            DialogUtil.showErrorMessage("Lỗi lấy thông tin tài khoản\n" + ex.getMessage());
+            return;
+        }
+
+        initChangePasswordComponents();
+        setVisible(parentFrame);
     }
+
+    private void setVisible(JDialog parentFrame) {
+        AppFrame = new JDialog(parentFrame,"Thông tin tài khoản", true);
+        AppFrame.setContentPane(this.mainPanel);
+        AppFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        AppFrame.setLocationRelativeTo(null);
+        AppFrame.pack();
+        AppFrame.setVisible(true);
+    }
+
 
     void initChangePasswordComponents() {
         txtCurrentPwd.setText("");
@@ -63,25 +90,22 @@ public class FormAccount {
     }
 
     //STAFF-------------------------------------------------------------------------------------------------------------
-    FormAccount(JDialog parentFrame, Staff staffAccount) {
-        if (staffAccount == null) {
-            DialogUtil.showErrorMessage("Lỗi lấy thông tin tài khoản");
-            return;
-        }
+    private void initComponentsForStaff() {
+        refreshStaffInfo();
+        //Staff do not have these info
+        infoPanel.remove(lblGender);
+        infoPanel.remove(selectGender);
 
-        currentStaffAccount = staffAccount;
-        initComponentsForStaff();
-        initChangePasswordComponents();
-        setVisible(parentFrame);
+        btnSaveInfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateStaffInfo();
+            }
+        });
     }
 
-    private void setVisible(JDialog parentFrame) {
-        AppFrame = new JDialog(parentFrame,"Thông tin tài khoản", true);
-        AppFrame.setContentPane(this.mainPanel);
-        AppFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        AppFrame.setLocationRelativeTo(null);
-        AppFrame.pack();
-        AppFrame.setVisible(true);
+    private void refreshStaffInfo() {
+        txtName.setText(currentStaffAccount.getName());
     }
 
     //Staff account updating ------------------------------------------------------------------------
@@ -93,7 +117,10 @@ public class FormAccount {
         } else {
             currentStaffAccount.setName(newStaffName);
             try {
-                StaffDAO.update(currentStaffAccount);
+                LoginController.updateAccountInfo(currentStaffAccount);
+                currentStaffAccount = LoginController.getLogInStaff();
+
+                refreshStaffInfo();
                 DialogUtil.showInfoMessage("Cập nhật thành công!");
             } catch (Exception exception) {
                 DialogUtil.showErrorMessage("Lỗi cập nhật thông tin tài khoản\n"+ exception.getMessage());
@@ -118,7 +145,9 @@ public class FormAccount {
 
         currentStaffAccount.getAccount().setPassword(newPwd);
         try {
-            AccountDAO.update(currentStaffAccount.getAccount());
+            LoginController.updateAccount(currentStaffAccount.getAccount());
+            currentStaffAccount = LoginController.getLogInStaff();
+
             DialogUtil.showInfoMessage("Cập nhật thành công!");
         } catch (Exception exception) {
             DialogUtil.showErrorMessage("Lỗi cập nhật mật khẩu\n"+ exception.getMessage());
@@ -128,21 +157,8 @@ public class FormAccount {
     //Staff account updating ------------------------------------------------------------------------
 
     //STUDENT-----------------------------------------------------------------------------------------------------------
-    FormAccount(JDialog parentFrame, Student studentAccount) {
-        if (studentAccount == null) {
-            DialogUtil.showErrorMessage("Lỗi lấy thông tin tài khoản");
-            return;
-        }
-
-        currentStudentAccount = studentAccount;
-        initComponentsForStudent();
-        initChangePasswordComponents();
-        setVisible(parentFrame);
-    }
-
     private void initComponentsForStudent() {
-        txtName.setText(currentStudentAccount.getName());
-        selectGender.setSelectedIndex(currentStudentAccount.isMale()? 0 : 1);
+        refreshStudentInfo();
 
         btnSaveInfo.addActionListener(new ActionListener() {
             @Override
@@ -150,6 +166,11 @@ public class FormAccount {
                 updateStudentInfo();
             }
         });
+    }
+
+    private void refreshStudentInfo() {
+        txtName.setText(currentStudentAccount.getName());
+        selectGender.setSelectedIndex(currentStudentAccount.isMale()? 0 : 1);
     }
 
     //Student account updating ----------------------------------------------------------------------
@@ -163,13 +184,17 @@ public class FormAccount {
             currentStudentAccount.setName(newStudentName);
             currentStudentAccount.setMale(studentGender);
             try {
-                StudentDAO.update(currentStudentAccount);
+                LoginController.updateAccountInfo(currentStudentAccount);
+                currentStudentAccount = LoginController.getLogInStudent();
+
+                refreshStudentInfo();
                 DialogUtil.showInfoMessage("Cập nhật thành công!");
             } catch (Exception exception) {
                 DialogUtil.showErrorMessage("Lỗi cập nhật thông tin tài khoản\n"+ exception.getMessage());
             }
         }
     }
+
     private void updateStudentAccountPassword() {
         String currentPwd = new String(txtCurrentPwd.getPassword());
         String newPwd = new String(txtNewPwd.getPassword());
@@ -188,7 +213,7 @@ public class FormAccount {
 
         currentStudentAccount.getAccount().setPassword(newPwd);
         try {
-            AccountDAO.update(currentStudentAccount.getAccount());
+            LoginController.updateAccount(currentStudentAccount.getAccount());
             DialogUtil.showInfoMessage("Cập nhật thành công!");
         } catch (Exception exception) {
             DialogUtil.showErrorMessage("Lỗi cập nhật mật khẩu\n"+ exception.getMessage());

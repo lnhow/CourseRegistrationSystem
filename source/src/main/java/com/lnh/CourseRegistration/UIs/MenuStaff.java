@@ -1,8 +1,7 @@
 package com.lnh.CourseRegistration.UIs;
 
-import com.lnh.CourseRegistration.DAOs.StaffDAO;
+import com.lnh.CourseRegistration.Controllers.LoginController;
 import com.lnh.CourseRegistration.Entities.Account;
-import com.lnh.CourseRegistration.Entities.Staff;
 import com.lnh.CourseRegistration.UIs.Screens.ClassInfo.ClassInfoScreen;
 import com.lnh.CourseRegistration.UIs.Screens.RegistrationSession.SessionScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Semester.SemesterScreen;
@@ -17,7 +16,6 @@ import java.awt.event.ActionListener;
 
 public class MenuStaff implements ActionListener {
     private JFrame AppFrame;
-    private Staff currentLoggedIn;
 
     private JPanel mainPanel;
     private JButton btnLogOut;
@@ -32,16 +30,15 @@ public class MenuStaff implements ActionListener {
     private JButton btnSemester;
     private JButton btnRegisterSession;
 
-    public MenuStaff(Account account) {
+    public MenuStaff() {
         initComponents();
         setVisible();
-        fetchStaff(account);
 
-        boolean isStaffNotExist = currentLoggedIn == null;
+        boolean isStaffNotExist =
+                LoginController.getLogInAccountType() != Account.ACCOUNT_STAFF
+                || LoginController.getLogInStaff() == null;
         if (isStaffNotExist) {
-            DialogUtil.showErrorMessage(
-                    "Tài khoản không tồn tại(ID: "+account.getId()+"). Vui lòng liên hệ admin."
-            );
+            DialogUtil.showErrorMessage("Lỗi đăng nhập");
             logOut();
             return;
         }
@@ -98,27 +95,18 @@ public class MenuStaff implements ActionListener {
 
     //Handling methods-------------------------------------------------------------------------------------------------
     private void setAccountText() {
-        txtStaff.setText("Xin chào, " + currentLoggedIn.getName());
-    }
-
-    private void fetchStaff(Account account) {
-        try {
-            currentLoggedIn = StaffDAO.getByAccountID(account.getId());
-        } catch (Exception exception) {
-            DialogUtil.showErrorMessage(exception.getMessage());
-        }
+        txtStaff.setText("Xin chào, " + LoginController.getLogInStaff().getName());
     }
 
     private void logOut() {
-        currentLoggedIn = null;
+        LoginController.logOut();
         new FormLogin();
         AppFrame.dispose();
     }
 
     private void openAccountForm() {
         JDialog dialog = new JDialog(this.AppFrame);
-        new FormAccount(dialog, currentLoggedIn);
-        fetchStaff(currentLoggedIn.getAccount());
+        new FormAccount(dialog);
         setAccountText();
     }
 

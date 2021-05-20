@@ -1,6 +1,6 @@
 package com.lnh.CourseRegistration.UIs;
 
-import com.lnh.CourseRegistration.DAOs.AccountDAO;
+import com.lnh.CourseRegistration.Controllers.LoginController;
 import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
 
@@ -58,14 +58,14 @@ public class FormLogin {
                     return;
                 }
 
-                Account loginAccount = login(username,password);
-                txtMessage.setText("");
-                if (loginAccount == null) {
-                    txtMessage.setText("Sai Tài khoản hay Mật khẩu");
-                    AppFrame.setCursor(Cursor.getDefaultCursor());
+                try {
+                    LoginController.logIn(username, password);
+                } catch (Exception ex) {
+                    DialogUtil.showWarningMessage(ex.getMessage());
                     return;
                 }
-                processLogin(loginAccount);
+
+                processLogin();
                 AppFrame.setCursor(Cursor.getDefaultCursor());
             }
         });
@@ -81,37 +81,27 @@ public class FormLogin {
         });
     }
 
-
-    private Account login(String username, String password) {
-        Account loginAccount = null;
-        try {
-            loginAccount = AccountDAO.getByLoginInfo(username, password);
-        } catch (Exception exception) {
-            DialogUtil.showErrorMessage(exception.getMessage());
-        }
-
-        return loginAccount;
-    }
-
-    private void processLogin(Account account) {
-        if (account == null) {
+    private void processLogin() {
+        int loginAccountType = LoginController.getLogInAccountType();
+        txtMessage.setText("");
+        if (loginAccountType == Account.ACCOUNT_INVALID) {
+            txtMessage.setText("Sai Tài khoản hay Mật khẩu");
+            AppFrame.setCursor(Cursor.getDefaultCursor());
             return;
         }
 
-        switch (account.getType()) {
-            case Account.ACCOUNT_STUDENT:
-                new MenuStudent(account);
+        switch (loginAccountType) {
+            case Account.ACCOUNT_STUDENT -> {
+                new MenuStudent();
                 AppFrame.dispose();
-                break;
-            case Account.ACCOUNT_STAFF:
-                new MenuStaff(account);
+            }
+            case Account.ACCOUNT_STAFF -> {
+                new MenuStaff();
                 AppFrame.dispose();
-                break;
-            default:
-                DialogUtil.showErrorMessage(
-                        "Tài khoản không tồn tại(ID: "+account.getId()+"). Vui lòng liên hệ admin."
-                );
-                break;
+            }
+            default -> DialogUtil.showErrorMessage(
+                    "Người dùng không liên kết với tài khoản"
+            );
         }
     }
 }
