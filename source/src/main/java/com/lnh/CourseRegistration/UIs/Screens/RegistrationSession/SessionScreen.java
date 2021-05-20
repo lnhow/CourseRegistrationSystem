@@ -169,6 +169,7 @@ public class SessionScreen extends JFrame implements ActionListener {
      * Refresh table with data from Database
      */
     private void refreshData() {
+        refreshTxtCurrentSemester();
         try {
             List<RegistrationSession> RegistrationSessionList = RegistrationSessionDAO.getAll();
             setTableData(RegistrationSessionList);
@@ -254,6 +255,7 @@ public class SessionScreen extends JFrame implements ActionListener {
                                 + ObjectName
                                 + "\nMenu chính > Học kỳ > Chọn một Học kỳ"
                 );
+                return;
             }
         }
 

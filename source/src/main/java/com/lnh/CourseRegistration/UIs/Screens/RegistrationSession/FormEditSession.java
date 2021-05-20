@@ -109,6 +109,8 @@ public class FormEditSession extends JDialog {
             return;
         }
 
+        currentSession.setSessionStart(Timestamp.valueOf(timeStart));
+        currentSession.setSessionEnd(Timestamp.valueOf(timeEnd));
 
         String msg = "Lưu thay đổi?";
         int option = JOptionPane.showConfirmDialog(parent, msg);
