@@ -7,17 +7,14 @@ import com.lnh.CourseRegistration.DAOs.RegistrationSessionDAO;
 import com.lnh.CourseRegistration.Entities.RegistrationSession;
 import com.lnh.CourseRegistration.Entities.Semester;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
-import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-//TODO: Add Time picker
+
 public class FormEditSession extends JDialog {
     private JPanel mainPanel;
     private JTextField txtName;

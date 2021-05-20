@@ -82,8 +82,4 @@ public class RegistrationSession {
     public void setSessionEnd(Timestamp sessionEnd) {
         this.sessionEnd = sessionEnd;
     }
-
-    public void setCreatedBy(Staff createdBy) {
-        this.createdBy = createdBy;
-    }
 }
