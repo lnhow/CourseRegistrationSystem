@@ -8,7 +8,7 @@ public class ClassInfo {
     @Id
     @Column(name = "ClassID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     @Column(name = "ClassName", length = 10)
     private String className;

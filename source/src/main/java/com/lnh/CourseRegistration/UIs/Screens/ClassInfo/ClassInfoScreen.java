@@ -2,18 +2,17 @@ package com.lnh.CourseRegistration.UIs.Screens.ClassInfo;
 
 import com.lnh.CourseRegistration.DAOs.ClassInfoDAO;
 import com.lnh.CourseRegistration.Entities.ClassInfo;
+import com.lnh.CourseRegistration.UIs.Screens.Student.StudentScreen;
 import com.lnh.CourseRegistration.Utils.CustomComparator;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
-import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO: Add info about Num of Male, Female & Total Student
 public class ClassInfoScreen extends JFrame implements ActionListener {
     private JScrollPane paneTable;
     private JTable mainTable;
@@ -22,10 +21,12 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
     private JButton btnNew;
     private JButton btnSearch;
     private JPanel mainPanel;
-
+    private JPanel panelTab;
+    private static final int CARD_STUDENT = 0;
+    private StudentScreen studentScreen = null;
 
     private JPopupMenu popupMenu;
-    private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, searchMenuItem;
+    private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, searchMenuItem, selectMenuItem;
 
     private static JFrame AppFrame;
     private DefaultTableModel tableModel;
@@ -59,6 +60,7 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
     }
 
     private ClassInfoScreen() {
+        initStudentScreen();
         initTable();
         initBtnListeners();
         refreshClassInfoTable();
@@ -86,6 +88,11 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
             AppFrame.setLocationRelativeTo(null);
         }
         AppFrame.setVisible(true);
+    }
+
+    private void initStudentScreen() {
+        studentScreen = new StudentScreen();
+        panelTab.add(studentScreen.getMainPanel(), CARD_STUDENT);
     }
 
     private void initTable() {
@@ -124,13 +131,16 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
         editMenuItem = new JMenuItem("Chỉnh sửa");
         deleteMenuItem = new JMenuItem("Xóa");
         searchMenuItem = new JMenuItem("Tìm kiếm");
+        selectMenuItem = new JMenuItem("Xem danh sách lớp");
 
+        selectMenuItem.addActionListener(this);
         refreshMenuItem.addActionListener(this);
         searchMenuItem.addActionListener(this);
         newMenuItem.addActionListener(this);
         editMenuItem.addActionListener(this);
         deleteMenuItem.addActionListener(this);
 
+        popupMenu.add(selectMenuItem);
         popupMenu.add(searchMenuItem);
         popupMenu.add(refreshMenuItem);
         popupMenu.addSeparator();
@@ -173,10 +183,23 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
             search();
         } else if (source == refreshMenuItem) {
             refreshClassInfoTable();
+        } else if (source == selectMenuItem) {
+            viewClassStudents();
         }
     }
 
     //Handler method---------------------------------------------
+    private void viewClassStudents() {
+        int classID = getSelectedClassInfoID();
+
+        if (classID == -1) {
+            DialogUtil.showWarningMessage("Vui lòng chọn một " + ObjectName + " để xem danh sách");
+            return;
+        }
+
+        studentScreen.setClassID(classID);
+    }
+
     private void refreshClassInfoTable() {
         try {
             List<Object[]> allWithInfo = ClassInfoDAO.getAllWithInfo();
@@ -270,7 +293,7 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
 
         String searchValue = JOptionPane.showInputDialog(this, msg);
 
-        String value = searchValue.trim();
+        String value = (searchValue == null) ? null: searchValue.trim();
         if (value != null && value.length() > 0) {
             try {
                 List<Object[]> resultList = ClassInfoDAO.searchByNameWithInfo(value);

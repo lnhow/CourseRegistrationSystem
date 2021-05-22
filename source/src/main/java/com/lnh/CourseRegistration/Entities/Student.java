@@ -24,7 +24,7 @@ public class Student {
     @JoinColumn(name = "ClassID")
     private ClassInfo classInfo;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "AccountID")
     private Account account;
 
