@@ -20,8 +20,9 @@ public class Student {
     @Column(name = "Male")
     private boolean isMale;
 
-    @Column(name = "ClassID")
-    private int classID;
+    @OneToOne
+    @JoinColumn(name = "ClassID")
+    private ClassInfo classInfo;
 
     @OneToOne
     @JoinColumn(name = "AccountID")
@@ -29,12 +30,12 @@ public class Student {
 
     public Student() { }
 
-    public Student(long studentNo, String id, String name, boolean isMale, int classID, Account account) {
+    public Student(long studentNo, String id, String name, boolean isMale, ClassInfo classInfo, Account account) {
         this.studentNo = studentNo;
         this.id = id;
         this.name = name;
         this.isMale = isMale;
-        this.classID = classID;
+        this.classInfo = classInfo;
         this.account = account;
     }
 
@@ -70,12 +71,12 @@ public class Student {
         isMale = male;
     }
 
-    public int getClassID() {
-        return classID;
+    public ClassInfo getClassInfo() {
+        return classInfo;
     }
 
-    public void setClassID(int classID) {
-        this.classID = classID;
+    public void setClassInfo(ClassInfo classInfo) {
+        this.classInfo = classInfo;
     }
 
     public Account getAccount() {

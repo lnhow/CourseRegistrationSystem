@@ -34,7 +34,10 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
     //Table related attributes
     private static final int COLUMN_ID = 0;
     private static final int COLUMN_NAME = 1;
-    Object[] columnLabels = {"ID", "Lớp học"};
+    private static final int COLUMN_STUDENT = 2;
+    private static final int COLUMN_MALE = 3;
+    private static final int COLUMN_FEMALE = 4;
+    Object[] columnLabels = {"ID", "Lớp học", "Sỉ số", "Sỉ số Nam", "Sỉ số Nữ"};
 
     private static ClassInfoScreen instance;
 
@@ -100,6 +103,9 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
 
         sorter.setComparator(COLUMN_ID, new CustomComparator.ComparatorInt());
         sorter.setComparator(COLUMN_NAME, new CustomComparator.ComparatorString());
+        sorter.setComparator(COLUMN_STUDENT, new CustomComparator.ComparatorLong());
+        sorter.setComparator(COLUMN_MALE, new CustomComparator.ComparatorLong());
+        sorter.setComparator(COLUMN_FEMALE, new CustomComparator.ComparatorLong());
 
         //Sort by ID default
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
@@ -173,8 +179,8 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
     //Handler method---------------------------------------------
     private void refreshClassInfoTable() {
         try {
-            List<ClassInfo> ClassInfoList = ClassInfoDAO.getAll();
-            setTableData(ClassInfoList);
+            List<Object[]> allWithInfo = ClassInfoDAO.getAllWithInfo();
+            setTableData(allWithInfo);
         } catch (Exception ex) {
             String msg = "Lỗi không lấy được danh sách " + ObjectName +"\n";
             DialogUtil.showErrorMessage(msg + ex.getMessage());
@@ -183,15 +189,22 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
 
     /**
      * Set table data to list of
-     * @param ClassInfoList List data of ClassInfo to set
+     * @param rows List data of rows to set
      */
-    private void setTableData(List<ClassInfo> ClassInfoList) {
+    private void setTableData(List<Object[]> rows) {
         tableModel.setRowCount(0);
 
-        for (ClassInfo classInfo: ClassInfoList) {
+        for (Object[] row: rows) {
+            ClassInfo classInfo = (ClassInfo) row[0];
+            Number total = (Number) row[1];
+            Number totalMale = (Number) row[2];
+            Number totalFemale = (Number) row[3];
             Object[] rowData = {
                     classInfo.getId(),
-                    classInfo.getClassName()
+                    classInfo.getClassName(),
+                    total,
+                    totalMale,
+                    totalFemale
             };
             tableModel.addRow(rowData);
         }
@@ -260,8 +273,8 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
         String value = searchValue.trim();
         if (value != null && value.length() > 0) {
             try {
-                List<ClassInfo> classInfoList = ClassInfoDAO.searchByName(value);
-                setTableData(classInfoList);
+                List<Object[]> resultList = ClassInfoDAO.searchByNameWithInfo(value);
+                setTableData(resultList);
             } catch (Exception ex) {
                 DialogUtil.showErrorMessage("Lỗi tìm kiếm.\n" + ex.getMessage());
             }

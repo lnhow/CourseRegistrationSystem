@@ -31,6 +31,30 @@ public class ClassInfoDAO {
         return list;
     }
 
+    public static List<Object[]> getAllWithInfo() throws Exception {
+        List<Object[]> list = null;
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+
+        try {
+            String hql = "SELECT cla, COUNT(stu.studentNo)," +
+                    " SUM(CASE WHEN stu.isMale = true THEN 1 ELSE 0 END)," +
+                    " SUM(CASE WHEN stu.isMale = false THEN 1 ELSE 0 END)" +
+                    " FROM ClassInfo cla" +
+                    " LEFT JOIN Student stu" +
+                    " ON stu.classInfo.id = cla.id" +
+                    " GROUP BY cla.id";
+            Query<Object[]> query = session.createQuery(hql);
+            list = query.list();
+        } catch (HibernateException ex) {
+            HelperUtils.throwException(ex.getMessage());
+        } finally {
+            session.close();
+        }
+
+        return list;
+    }
+
     public static void insert(ClassInfo newClassInfo) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
 
@@ -98,6 +122,32 @@ public class ClassInfoDAO {
                     + " FROM ClassInfo cla"
                     + " WHERE lower(cla.className) LIKE lower(:search_name)";
             Query<ClassInfo> query = session.createQuery(hql);
+            query.setParameter("search_name", "%" + value + "%");
+            list = query.list();
+        } catch (HibernateException ex) {
+            HelperUtils.throwException(ex.getMessage());
+        } finally {
+            session.close();
+        }
+
+        return list;
+    }
+
+    public static List<Object[]> searchByNameWithInfo(String value) throws Exception {
+        List<Object[]> list = null;
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+
+        try {
+            String hql = "SELECT cla, COUNT(stu.studentNo)," +
+                    " SUM(CASE WHEN stu.isMale = true THEN 1 ELSE 0 END)," +
+                    " SUM(CASE WHEN stu.isMale = false THEN 1 ELSE 0 END)" +
+                    " FROM ClassInfo cla" +
+                    " LEFT JOIN Student stu" +
+                    " ON stu.classInfo.id = cla.id" +
+                    " WHERE lower(cla.className) LIKE lower(:search_name)" +
+                    " GROUP BY cla.id";
+            Query<Object[]> query = session.createQuery(hql);
             query.setParameter("search_name", "%" + value + "%");
             list = query.list();
         } catch (HibernateException ex) {
