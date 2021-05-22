@@ -1,15 +1,19 @@
 package com.lnh.CourseRegistration.UIs.Screens.Student;
 
+import com.lnh.CourseRegistration.DAOs.ClassInfoDAO;
 import com.lnh.CourseRegistration.DAOs.StudentDAO;
 import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.Entities.ClassInfo;
 import com.lnh.CourseRegistration.Entities.Student;
+import com.lnh.CourseRegistration.Utils.AutoCompletion;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
+import com.lnh.CourseRegistration.Utils.HelperUtils;
 import com.sun.istack.NotNull;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class FormEditStudent extends JDialog {
 
@@ -22,16 +26,22 @@ public class FormEditStudent extends JDialog {
     private JButton btnResetPwd;
     private JTextField txtID;
     private JComboBox selectGender;
-    private JTextField txtClass;
+    private JComboBox selectClass;
 
     private StudentScreen parent;
     private Student currentStudent;
     private ClassInfo currentClass;
+    private List<ClassInfo> listClass;
     private boolean isNewScreen;
 
     public FormEditStudent(JFrame parentFrame, Student student, @NotNull ClassInfo classInfo) {
         super(parentFrame, true);
         currentClass = classInfo;
+        try {
+            listClass = fetchClassInfo();
+        } catch (Exception ex) {
+            DialogUtil.showErrorMessage("Không lấy được danh sách lớp\n" + ex.getMessage());
+        }
         if (student == null) {
             isNewScreen = true;
             initNewStudent();
@@ -57,6 +67,7 @@ public class FormEditStudent extends JDialog {
     }
 
     private void initComponents() {
+        AutoCompletion.enable(selectClass); //Enabled auto completion for this comboBox
         refreshTextFields();
 
         if (isNewScreen) {
@@ -91,12 +102,26 @@ public class FormEditStudent extends JDialog {
         setVisible(true);
     }
 
+    private List<ClassInfo> fetchClassInfo() throws Exception {
+        List<ClassInfo> list = ClassInfoDAO.getAll();
+        return list;
+    }
+
+
     private void refreshTextFields() {
         txtDBID.setText(Long.toString(currentStudent.getStudentNo()));
         txtID.setText(currentStudent.getId());
         txtName.setText(currentStudent.getName());
         selectGender.setSelectedIndex(currentStudent.isMale() ? 0 : 1);
-        txtClass.setText(currentStudent.getClassInfo().getClassName());
+        
+        selectClass.setModel(new DefaultComboBoxModel(listClass.toArray()));
+        if (currentClass == null) {
+            selectClass.setSelectedIndex(0);
+        }
+        else {
+            selectClass.setSelectedItem(currentClass);
+        }
+
         txtUsername.setText(currentStudent.getAccount().getUsername());
     }
 
@@ -107,12 +132,16 @@ public class FormEditStudent extends JDialog {
         String name = txtName.getText();
         String username = txtUsername.getText();
         boolean isMale = selectGender.getSelectedIndex() == 0;
+        currentClass = (ClassInfo) selectClass.getSelectedItem();
 
         if (name.equals("")) {
             DialogUtil.showWarningMessage("Họ tên không được để trống");
             return;
         } else if (id.equals("")) {
-            DialogUtil.showWarningMessage("Tên đăng nhập không được để trống");
+            DialogUtil.showWarningMessage("MSSV không được để trống");
+            return;
+        } else if (currentClass == null) {
+            DialogUtil.showWarningMessage("Lớp không được để trống");
             return;
         }
 
@@ -128,6 +157,7 @@ public class FormEditStudent extends JDialog {
 
         currentStudent.setId(id);
         currentStudent.setName(name);
+        currentStudent.setClassInfo(currentClass);
         currentStudent.setMale(isMale);
 
         String msg = "Lưu thay đổi?";

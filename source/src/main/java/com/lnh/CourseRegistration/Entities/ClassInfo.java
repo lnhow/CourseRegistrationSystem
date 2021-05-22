@@ -33,4 +33,9 @@ public class ClassInfo {
     public void setClassName(String className) {
         this.className = className;
     }
+
+    @Override
+    public String toString() {
+        return this.className;
+    }
 }
