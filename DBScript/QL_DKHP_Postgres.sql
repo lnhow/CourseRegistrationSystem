@@ -96,7 +96,8 @@ CREATE TABLE Semester(
 	SemesterName VARCHAR(15),
 	SemesterYear INT,
 	SemesterStart DATE,
-	SemesterEnd DATE
+	SemesterEnd DATE,
+	IsCurrentSemester BOOLEAN DEFAULT FALSE
 	
 	CONSTRAINT SEMESTER_START_END
 	CHECK (SemesterStart < SemesterEnd)

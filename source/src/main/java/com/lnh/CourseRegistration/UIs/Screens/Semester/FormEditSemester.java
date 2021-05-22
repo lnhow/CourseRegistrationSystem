@@ -112,7 +112,7 @@ public class FormEditSemester extends JDialog {
             DialogUtil.showWarningMessage("Ngày kết thúc không được để trống");
             return;
         } else if (name.equals("")) {
-            DialogUtil.showWarningMessage("tên Học kỳ không được để trống");
+            DialogUtil.showWarningMessage("Tên Học kỳ không được để trống");
             return;
         }
 

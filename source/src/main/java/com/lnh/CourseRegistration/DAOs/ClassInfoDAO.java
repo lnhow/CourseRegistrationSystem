@@ -11,7 +11,6 @@ import org.hibernate.query.Query;
 
 import java.util.List;
 
-//TODO: Add info about Num of Male, Female & Total Student
 public class ClassInfoDAO {
     public static List<ClassInfo> getAll() throws Exception {
         List<ClassInfo> list = null;

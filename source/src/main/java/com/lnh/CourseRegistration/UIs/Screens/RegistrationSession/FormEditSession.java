@@ -2,8 +2,8 @@ package com.lnh.CourseRegistration.UIs.Screens.RegistrationSession;
 
 import com.github.lgooddatepicker.components.DateTimePicker;
 import com.lnh.CourseRegistration.Controllers.LoginController;
-import com.lnh.CourseRegistration.Controllers.SemesterController;
 import com.lnh.CourseRegistration.DAOs.RegistrationSessionDAO;
+import com.lnh.CourseRegistration.DAOs.SemesterDAO;
 import com.lnh.CourseRegistration.Entities.RegistrationSession;
 import com.lnh.CourseRegistration.Entities.Semester;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
@@ -25,13 +25,19 @@ public class FormEditSession extends JDialog {
     private DateTimePicker pickerEnd;
 
     private SessionScreen parent;
+    Semester current = null;
     private RegistrationSession currentSession;   //Current Session to edit
     private boolean isNewScreen;
 
     public FormEditSession(JFrame parentFrame, RegistrationSession session) {
         super(parentFrame, true);
         if (session == null) {
-            Semester current = SemesterController.getCurrentSemester();
+            try {
+                current = SemesterDAO.getCurrentSemester();
+            } catch (Exception ex) {
+                DialogUtil.showErrorMessage("Lỗi. Không lấy dữ liệu học kì hiện tại được\n" +ex.getMessage());
+                return;
+            }
 
             if (current == null) {
                 DialogUtil.showWarningMessage("Chưa có học kỳ nào được đặt làm Học kỳ hiện tại");
@@ -51,7 +57,6 @@ public class FormEditSession extends JDialog {
     }
 
     private void initNewSession() {
-        Semester current = SemesterController.getCurrentSemester();
         currentSession = new RegistrationSession(current, LoginController.getLogInStaff());
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         currentSession.setSessionStart(currentTime);

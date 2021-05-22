@@ -23,16 +23,23 @@ public class Semester {
     @Column(name = "SemesterEnd")
     private Date semesterEnd;
 
+    @Column(name = "IsCurrentSemester", insertable = false)
+    private boolean isCurrentSemester;
+
     public Semester() {
         id = 0; //Wrapper Integer Class do not have no args constructor
     }
 
-    public Semester(int id, String semesterName, Integer semesterYear, Date semesterStart, Date semesterEnd) {
+    public Semester(
+            int id, String semesterName, Integer semesterYear,
+            Date semesterStart, Date semesterEnd, boolean isCurrentSemester
+    ) {
         this.id = id;
         this.semesterName = semesterName;
         this.semesterYear = semesterYear;
         this.semesterStart = semesterStart;
         this.semesterEnd = semesterEnd;
+        this.isCurrentSemester = isCurrentSemester;
     }
 
 
@@ -56,6 +63,9 @@ public class Semester {
         return semesterEnd;
     }
 
+    public boolean isCurrentSemester() {
+        return isCurrentSemester;
+    }
 
     public void setSemesterName(String semesterName) {
         this.semesterName = semesterName;
@@ -71,5 +81,9 @@ public class Semester {
 
     public void setSemesterEnd(Date semesterEnd) {
         this.semesterEnd = semesterEnd;
+    }
+
+    public void setCurrentSemester(boolean currentSemester) {
+        isCurrentSemester = currentSemester;
     }
 }

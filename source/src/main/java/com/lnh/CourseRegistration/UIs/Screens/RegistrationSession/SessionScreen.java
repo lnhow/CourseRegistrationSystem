@@ -1,7 +1,7 @@
 package com.lnh.CourseRegistration.UIs.Screens.RegistrationSession;
 
-import com.lnh.CourseRegistration.Controllers.SemesterController;
 import com.lnh.CourseRegistration.DAOs.RegistrationSessionDAO;
+import com.lnh.CourseRegistration.DAOs.SemesterDAO;
 import com.lnh.CourseRegistration.Entities.RegistrationSession;
 import com.lnh.CourseRegistration.Entities.Semester;
 import com.lnh.CourseRegistration.Utils.CustomComparator;
@@ -260,7 +260,7 @@ public class SessionScreen extends JFrame implements ActionListener {
      */
     private void openRegistrationSessionEditDialog(RegistrationSession aSession) {
         if (aSession == null) {
-            Semester currentSemester = SemesterController.getCurrentSemester();
+            Semester currentSemester = fetchCurrentSemester();
             if (currentSemester == null)  {
                 DialogUtil.showWarningMessage(
                         "Vui lòng đặt Học Kỳ hiện tại trước khi tạo một "
@@ -277,8 +277,19 @@ public class SessionScreen extends JFrame implements ActionListener {
 
     }
 
+    private Semester fetchCurrentSemester() {
+        Semester current = null;
+        try {
+            current = SemesterDAO.getCurrentSemester();
+        } catch (Exception ex) {
+            DialogUtil.showErrorMessage("Lỗi không lấy được thông tin học kì hiện tại\n" + ex.getMessage());
+        }
+        return current;
+    }
+
+
     private void refreshTxtCurrentSemester() {
-        Semester currentSemester = SemesterController.getCurrentSemester();
+        Semester currentSemester = fetchCurrentSemester();
         String msg = "Học kì hiện tại: "
                 + ((currentSemester == null) ?
                 "Chưa chọn":currentSemester.getSemesterName() + " Năm " + currentSemester.getSemesterYear()

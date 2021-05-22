@@ -1,6 +1,5 @@
 package com.lnh.CourseRegistration.UIs.Screens.Semester;
 
-import com.lnh.CourseRegistration.Controllers.SemesterController;
 import com.lnh.CourseRegistration.DAOs.SemesterDAO;
 import com.lnh.CourseRegistration.Entities.Semester;
 import com.lnh.CourseRegistration.Utils.CustomComparator;
@@ -186,14 +185,9 @@ public class SemesterScreen extends JFrame implements ActionListener {
         try {
             List<Semester> SemesterList = SemesterDAO.getAll();
             setTableData(SemesterList);
-
-            Semester currentSemester = SemesterController.getCurrentSemester();
-            if (currentSemester != null) {
-                Semester updatedCurrentSemester = SemesterDAO.getBySemesterID(currentSemester.getId());
-                this.setCurrentSemester(updatedCurrentSemester);
-            }
+            refreshTxtCurrentSemester();
         } catch (Exception ex) {
-            String msg = "Lỗi không lấy được danh sách " + ObjectName +"\n";
+            String msg = "Lỗi không lấy được dữ liệu " + ObjectName +"\n";
             DialogUtil.showErrorMessage(msg + ex.getMessage());
         }
     }
@@ -252,13 +246,6 @@ public class SemesterScreen extends JFrame implements ActionListener {
         if (option == JOptionPane.YES_OPTION) {
             try {
                 SemesterDAO.delete(semesterID);
-
-                //If delete semester successfully & the deleted semester is current semester
-                //Then set current semester to null
-                Semester currentSemester = SemesterController.getCurrentSemester();
-                if (currentSemester != null && currentSemester.getId() == semesterID) {
-                    this.setCurrentSemester(null);
-                }
             } catch (Exception ex) {
                 DialogUtil.showErrorMessage("Lỗi xóa thông tin "+ ObjectName +".\n" + ex.getMessage());
             }
@@ -300,12 +287,22 @@ public class SemesterScreen extends JFrame implements ActionListener {
      * @param semester semester to set to current semester
      */
     private void setCurrentSemester(Semester semester) {
-        SemesterController.setCurrentSemester(semester);
+        semester.setCurrentSemester(true);
+        try {
+            SemesterDAO.update(semester);
+        } catch (Exception ex) {
+            DialogUtil.showErrorMessage("Không đặt được học kì hiện tại");
+        }
         this.refreshTxtCurrentSemester();
     }
 
     private void refreshTxtCurrentSemester() {
-        Semester currentSemester = SemesterController.getCurrentSemester();
+        Semester currentSemester = null;
+        try {
+            currentSemester = SemesterDAO.getCurrentSemester();
+        } catch (Exception ex) {
+            DialogUtil.showErrorMessage("Không lấy được thông tin học kì hiện tại\n" + ex.getMessage());
+        }
         String msg = "Học kì hiện tại: "
                 + ((currentSemester == null) ?
                     "Chưa chọn":currentSemester.getSemesterName() + " Năm " + currentSemester.getSemesterYear()
@@ -361,13 +358,6 @@ public class SemesterScreen extends JFrame implements ActionListener {
         }
         else {
             SemesterDAO.update(semester);
-
-            //If update semester successfully & the updated semester is current semester
-            //Then set current semester to it
-            Semester currentSemester = SemesterController.getCurrentSemester();
-            if (currentSemester != null && currentSemester.getId() == semester.getId()) {
-                this.setCurrentSemester(semester);
-            }
         }
 
         refreshData();
