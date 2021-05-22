@@ -53,6 +53,23 @@ public class SemesterDAO {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
+
+            if (updatedSemester.isCurrentSemester()) {
+                //Update previous current semester to false
+                String hql = "SELECT sem" +
+                        " FROM Semester sem" +
+                        " WHERE sem.isCurrentSemester = true";
+                List<?> list = session.createQuery(hql).list();
+
+                if (list != null && list.size() > 0) {
+                    Semester current = (Semester) list.get(0);
+                    if (current.getId() != updatedSemester.getId()) {
+                        current.setCurrentSemester(false);
+                        session.update(current);
+                    }
+                }
+            }
+
             session.update(updatedSemester);
             transaction.commit();
         } catch (HibernateException ex) {
@@ -99,6 +116,33 @@ public class SemesterDAO {
 
             Query query = session.createQuery(hql);
             query.setParameter("sem_id", SemesterID);
+            List<Semester> list = query.list();
+
+            if (list != null && list.size() > 0) {
+                result = list.get(0);
+            }
+
+        } catch (HibernateException ex) {
+            HelperUtils.throwException(ex.getMessage());
+        } finally {
+            session.close();
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Semester getCurrentSemester() throws Exception {
+        Semester result = null;
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+
+        try {
+            String hql = "SELECT sem" +
+                    " FROM Semester sem" +
+                    " WHERE sem.isCurrentSemester = true";
+
+            Query query = session.createQuery(hql);
             List<Semester> list = query.list();
 
             if (list != null && list.size() > 0) {
