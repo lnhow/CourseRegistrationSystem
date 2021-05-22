@@ -6,6 +6,11 @@ import com.lnh.CourseRegistration.DAOs.StudentDAO;
 import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.Entities.Staff;
 import com.lnh.CourseRegistration.Entities.Student;
+import com.lnh.CourseRegistration.UIs.Screens.ClassInfo.ClassInfoScreen;
+import com.lnh.CourseRegistration.UIs.Screens.RegistrationSession.SessionScreen;
+import com.lnh.CourseRegistration.UIs.Screens.Semester.SemesterScreen;
+import com.lnh.CourseRegistration.UIs.Screens.Staff.StaffScreen;
+import com.lnh.CourseRegistration.UIs.Screens.Subject.SubjectScreen;
 import com.lnh.CourseRegistration.Utils.HelperUtils;
 
 public class LoginController {
@@ -184,5 +189,11 @@ public class LoginController {
         logInAccountType = Account.ACCOUNT_INVALID;
         currentLogInStudent = null;
         currentLogInStaff = null;
+
+        ClassInfoScreen.destroyInstance();
+        SessionScreen.destroyInstance();
+        SemesterScreen.destroyInstance();
+        StaffScreen.destroyInstance();
+        SubjectScreen.destroyInstance();
     }
 }

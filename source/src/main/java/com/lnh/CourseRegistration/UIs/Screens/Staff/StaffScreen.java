@@ -44,6 +44,16 @@ public class StaffScreen extends JFrame implements ActionListener {
         return instance;
     }
 
+    public static void destroyInstance() {
+        if (AppFrame != null) {
+            AppFrame.dispose();
+        }
+        if (instance != null) {
+            instance.dispose();
+            instance = null;
+        }
+    }
+
     private StaffScreen() {
         initTable();
         initBtnListeners();

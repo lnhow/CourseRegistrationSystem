@@ -43,11 +43,22 @@ public class SessionScreen extends JFrame implements ActionListener {
 
     private static SessionScreen instance;
 
+    //Allow only one screen at a time
     public static SessionScreen getInstance() {
         if (instance == null) {
             instance = new SessionScreen();
         }
         return instance;
+    }
+
+    public static void destroyInstance() {
+        if (AppFrame != null) {
+            AppFrame.dispose();
+        }
+        if (instance != null) {
+            instance.dispose();
+            instance = null;
+        }
     }
 
     private SessionScreen() {

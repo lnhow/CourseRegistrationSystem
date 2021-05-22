@@ -53,7 +53,6 @@ public class MenuStaff implements ActionListener {
 
         AppFrame.pack();
         AppFrame.setVisible(true);
-        AppFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     private void initComponents() {

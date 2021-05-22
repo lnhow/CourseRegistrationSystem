@@ -48,6 +48,16 @@ public class SemesterScreen extends JFrame implements ActionListener {
         return instance;
     }
 
+    public static void destroyInstance() {
+        if (AppFrame != null) {
+            AppFrame.dispose();
+        }
+        if (instance != null) {
+            instance.dispose();
+            instance = null;
+        }
+    }
+
     private SemesterScreen() {
         refreshTxtCurrentSemester();    //Display current semester text
         initTable();
