@@ -23,6 +23,8 @@
         <mapping class="com.lnh.CourseRegistration.Entities.Subject"/>
         <mapping class="com.lnh.CourseRegistration.Entities.Semester"/>
         <mapping class="com.lnh.CourseRegistration.Entities.RegistrationSession"/>
+        <mapping class="com.lnh.CourseRegistration.Entities.Course"/>
+        <mapping class="com.lnh.CourseRegistration.Entities.RegistrationInfo"/>
 
         <mapping class="com.lnh.CourseRegistration.Entities.SupportEntities.Weekday"/>
         <mapping class="com.lnh.CourseRegistration.Entities.SupportEntities.Shift"/>
