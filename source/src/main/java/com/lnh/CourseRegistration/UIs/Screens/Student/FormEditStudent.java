@@ -34,7 +34,7 @@ public class FormEditStudent extends JDialog {
     private List<ClassInfo> listClass;
     private boolean isNewScreen;
 
-    public FormEditStudent(JFrame parentFrame, Student student, @NotNull ClassInfo classInfo) {
+    public FormEditStudent(JFrame parentFrame, Student student, ClassInfo classInfo) {
         super(parentFrame, true);
         currentClass = classInfo;
         try {

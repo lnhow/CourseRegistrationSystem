@@ -57,4 +57,9 @@ public class Subject {
     public void setNumCredit(int numCredit) {
         this.numCredit = numCredit;
     }
+
+    @Override
+    public String toString() {
+        return  shortName.toString() + " - "+ subjectName.toString();
+    }
 }

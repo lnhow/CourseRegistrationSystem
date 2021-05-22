@@ -30,4 +30,9 @@ public class Weekday {
     public String getWeekdayName() {
         return weekdayName;
     }
+
+    @Override
+    public String toString() {
+        return weekdayName;
+    }
 }

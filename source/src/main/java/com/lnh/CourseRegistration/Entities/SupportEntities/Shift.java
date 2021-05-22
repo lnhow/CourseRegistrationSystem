@@ -38,4 +38,9 @@ public class Shift {
     public Time getShiftEnd() {
         return shiftEnd;
     }
+
+    @Override
+    public String toString() {
+        return shiftID + " (" + shiftStart + " - " + shiftEnd + ")";
+    }
 }

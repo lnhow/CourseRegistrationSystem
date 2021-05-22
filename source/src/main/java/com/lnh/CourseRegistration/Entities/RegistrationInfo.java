@@ -12,12 +12,12 @@ import java.sql.Timestamp;
 public class RegistrationInfo {
     @Id
     @OneToOne
-    @JoinColumn(name = "StudentID", nullable = false)
+    @JoinColumn(name = "StudentID", referencedColumnName = "StudentNo")
     private Student student;
 
     @Id
     @OneToOne
-    @JoinColumn(name = "CourseID", nullable = false)
+    @JoinColumn(name = "CourseID", referencedColumnName = "CourseID")
     private Course course;
 
     @Column(name = "RegisterTime", insertable = false)

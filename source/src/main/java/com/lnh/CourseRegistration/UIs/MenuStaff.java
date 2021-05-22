@@ -3,6 +3,7 @@ package com.lnh.CourseRegistration.UIs;
 import com.lnh.CourseRegistration.Controllers.LoginController;
 import com.lnh.CourseRegistration.Entities.Account;
 import com.lnh.CourseRegistration.UIs.Screens.ClassInfo.ClassInfoScreen;
+import com.lnh.CourseRegistration.UIs.Screens.Course.CourseScreen;
 import com.lnh.CourseRegistration.UIs.Screens.RegistrationSession.SessionScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Semester.SemesterScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Staff.StaffScreen;
@@ -88,7 +89,7 @@ public class MenuStaff implements ActionListener {
         } else if (source == btnStudent) {
 
         } else if (source == btnCourse) {
-
+            showCourseScreen();
         }
     }
 
@@ -127,5 +128,9 @@ public class MenuStaff implements ActionListener {
 
     private void showSessionScreen() {
         SessionScreen.getInstance().openInNewWindow();
+    }
+
+    private void showCourseScreen() {
+        CourseScreen.getInstance().openInNewWindow();
     }
 }
