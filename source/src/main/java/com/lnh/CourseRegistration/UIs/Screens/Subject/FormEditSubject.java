@@ -82,7 +82,7 @@ public class FormEditSubject extends JDialog {
         txtSubjectID.setText(Integer.toString(currentSubject.getId()));
         txtShortName.setText(currentSubject.getShortName());
         txtName.setText(currentSubject.getSubjectName());
-        txtCredit.setText(Integer.toString(currentSubject.getNumCredit()));
+        txtCredit.setValue(currentSubject.getNumCredit());
     }
 
 
@@ -90,7 +90,7 @@ public class FormEditSubject extends JDialog {
     private void saveInfo() {
         String name = txtName.getText().trim();
         String shortName = txtShortName.getText().trim();
-        Integer numCredit = txtCredit.getValue() != null ? ((Long) txtCredit.getValue()).intValue(): null;
+        Integer numCredit = txtCredit.getValue() != null ? ((Number) txtCredit.getValue()).intValue(): null;
 
         if (name.equals("")) {
             DialogUtil.showWarningMessage("Tên Môn học không được để trống");
