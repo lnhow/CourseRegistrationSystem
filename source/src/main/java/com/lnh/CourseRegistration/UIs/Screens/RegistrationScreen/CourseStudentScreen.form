@@ -17,7 +17,7 @@
               <tabbedpane title="Danh sách lớp"/>
             </constraints>
             <properties/>
-            <border type="empty">
+            <border type="none">
               <size top="10" left="10" bottom="10" right="10"/>
             </border>
             <children>

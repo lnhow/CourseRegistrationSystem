@@ -277,6 +277,7 @@ public class SemesterScreen extends JFrame implements ActionListener {
             }
 
             this.setCurrentSemester(selected);
+            DialogUtil.showInfoMessage("Đặt thành công!");
         } catch (Exception ex) {
             DialogUtil.showErrorMessage("Không lấy được thông tin"+ ObjectName +". Lỗi:\n" + ex.getMessage());
         }
