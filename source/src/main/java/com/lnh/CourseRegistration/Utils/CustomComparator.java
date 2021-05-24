@@ -1,5 +1,6 @@
 package com.lnh.CourseRegistration.Utils;
 
+import java.time.LocalDateTime;
 import java.util.Comparator;
 
 public class CustomComparator {
@@ -33,6 +34,13 @@ public class CustomComparator {
     public static class ComparatorLong implements Comparator<Long> {
         @Override
         public int compare(Long o1, Long o2) {
+            return o1.compareTo(o2);
+        }
+    }
+
+    public static class ComparatorLocalDateTime implements Comparator<LocalDateTime> {
+        @Override
+        public int compare(LocalDateTime o1, LocalDateTime o2) {
             return o1.compareTo(o2);
         }
     }

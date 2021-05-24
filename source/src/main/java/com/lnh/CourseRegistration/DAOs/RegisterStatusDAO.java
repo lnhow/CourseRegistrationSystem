@@ -16,11 +16,26 @@ public class RegisterStatusDAO {
     static List<RegisterStatus> typeOfStatuses = null;
 
     public static List<RegisterStatus> getAll() throws Exception {
+        initStatuesIfEmpty();
+        return typeOfStatuses;
+    }
+
+    public static RegisterStatus getStatus(int statusID) throws Exception {
+        initStatuesIfEmpty();
+
+        for (RegisterStatus status: typeOfStatuses) {
+            if (status.getStatusID() == statusID) {
+                return status;
+            }
+        }
+
+        return null;
+    }
+
+    private static void initStatuesIfEmpty() throws Exception {
         if (typeOfStatuses == null) {
             typeOfStatuses = Collections.unmodifiableList(getNewInstance());
         }
-
-        return typeOfStatuses;
     }
 
     private static List<RegisterStatus> getNewInstance() throws Exception {
@@ -29,7 +44,9 @@ public class RegisterStatusDAO {
         Session session = factory.openSession();
 
         try {
-            String hql = "SELECT status FROM RegisterStatus status";
+            String hql = "SELECT status" +
+                    " FROM RegisterStatus status" +
+                    " ORDER BY status.statusID ASC";
             Query<RegisterStatus> query = session.createQuery(hql);
             list = query.list();
         } catch (HibernateException ex) {
@@ -44,4 +61,5 @@ public class RegisterStatusDAO {
 
         return list;
     }
+
 }

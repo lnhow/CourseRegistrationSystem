@@ -1,8 +1,11 @@
 package com.lnh.CourseRegistration;
 
+import com.lnh.CourseRegistration.DAOs.RegistrationInfoDAO;
+import com.lnh.CourseRegistration.Entities.RegistrationInfo;
 import com.lnh.CourseRegistration.UIs.FormLogin;
 
 import javax.swing.*;
+import java.util.List;
 
 public class App {
 
@@ -15,7 +18,6 @@ public class App {
 //        ) {
 //            e.printStackTrace();
 //        }
-
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

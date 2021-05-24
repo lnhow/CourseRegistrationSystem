@@ -7,6 +7,7 @@ import com.lnh.CourseRegistration.Entities.Course;
 import com.lnh.CourseRegistration.Entities.Semester;
 import com.lnh.CourseRegistration.Entities.Subject;
 import com.lnh.CourseRegistration.Entities.SupportEntities.Shift;
+import com.lnh.CourseRegistration.UIs.Screens.RegistrationScreen.CourseStudentScreen;
 import com.lnh.CourseRegistration.UIs.Screens.Student.StudentScreen;
 import com.lnh.CourseRegistration.Utils.CustomComparator;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
@@ -30,7 +31,7 @@ public class CourseScreen extends JFrame implements ActionListener {
     private JLabel txtCurrentSemester;
     private JPanel panelTab;
     private static final int CARD_STUDENT = 0;
-    private StudentScreen studentScreen = null;
+    private CourseStudentScreen courseStudentScreen = null;
 
     private JPopupMenu popupMenu;
     private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, searchMenuItem, selectMenuItem;
@@ -101,11 +102,12 @@ public class CourseScreen extends JFrame implements ActionListener {
             AppFrame.setLocationRelativeTo(null);
         }
         AppFrame.setVisible(true);
+        AppFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     private void initStudentScreen() {
-        studentScreen = new StudentScreen();
-        panelTab.add(studentScreen.getMainPanel(), CARD_STUDENT);
+        courseStudentScreen = new CourseStudentScreen();
+        panelTab.add(courseStudentScreen.getMainPanel(), CARD_STUDENT);
     }
 
     private void initTable() {
@@ -206,14 +208,14 @@ public class CourseScreen extends JFrame implements ActionListener {
 
     //Handler method---------------------------------------------
     private void viewClassStudents() {
-        long classID = getSelectedCourseID();
+        long courseID = getSelectedCourseID();
 
-        if (classID == -1) {
+        if (courseID == -1) {
             DialogUtil.showWarningMessage("Vui lòng chọn một " + ObjectName + " để xem danh sách");
             return;
         }
 
-        //studentScreen.setClassID(classID);
+        courseStudentScreen.setCourseID(courseID);
     }
 
     private void refreshData() {

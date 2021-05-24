@@ -210,16 +210,16 @@ public class CourseDAO {
     public static void delete(long CourseID) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
 
-        Course sessionToBeDeleted = session.get(Course.class, CourseID);
+        Course courseToBeDeleted = session.get(Course.class, CourseID);
 
-        if (sessionToBeDeleted == null) {
+        if (courseToBeDeleted == null) {
             return;
         }
 
         Transaction transaction = null;
         transaction = session.beginTransaction();
         try {
-            session.delete(sessionToBeDeleted);
+            session.delete(courseToBeDeleted);
             transaction.commit();
         } catch (HibernateException ex) {
             transaction.rollback();

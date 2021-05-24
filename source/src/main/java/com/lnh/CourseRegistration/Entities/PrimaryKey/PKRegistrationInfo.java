@@ -1,19 +1,17 @@
 package com.lnh.CourseRegistration.Entities.PrimaryKey;
 
-import com.lnh.CourseRegistration.Entities.Course;
-import com.lnh.CourseRegistration.Entities.Student;
-
 import java.io.Serializable;
 
 public class PKRegistrationInfo implements Serializable {
-    protected Student student;
-    protected Course course;
+    protected long studentID;
+    protected long courseID;
 
-    public PKRegistrationInfo() {}
+    public PKRegistrationInfo() {
+    }
 
-    public PKRegistrationInfo(Student student, Course course) {
-        this.student = student;
-        this.course = course;
+    public PKRegistrationInfo(long studentID, long courseID) {
+        this.studentID = studentID;
+        this.courseID = courseID;
     }
 
     @Override

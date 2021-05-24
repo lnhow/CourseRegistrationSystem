@@ -8,6 +8,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "RegisterStatus")
 public class RegisterStatus {
+    public static final int STATUS_WAITING = 1;
+    public static final int STATUS_CONFIRMED = 2;
+    public static final int STATUS_CANCELLED = 3;
+    public static final int STATUS_CANCELLED_BY_STUDENT = 4;
+
     @Id
     @Column(name = "StatusID", insertable = false, updatable = false)
     private int statusID;

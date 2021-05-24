@@ -11,14 +11,12 @@ import java.sql.Timestamp;
 @Table(name = "RegistrationInfo")
 public class RegistrationInfo {
     @Id
-    @OneToOne
-    @JoinColumn(name = "StudentID", referencedColumnName = "StudentNo")
-    private Student student;
+    @Column(name = "StudentID")
+    private long studentID;
 
     @Id
-    @OneToOne
-    @JoinColumn(name = "CourseID", referencedColumnName = "CourseID")
-    private Course course;
+    @Column(name = "CourseID")
+    private long courseID;
 
     @Column(name = "RegisterTime", insertable = false)
     private Timestamp registerTime;
@@ -34,29 +32,30 @@ public class RegistrationInfo {
     }
 
     public RegistrationInfo(
-            Student student, Course course, Timestamp registerTime, RegisterStatus status, String notes
+            long studentID, long courseID, Timestamp registerTime,
+            RegisterStatus status, String notes
     ) {
-        this.student = student;
-        this.course = course;
+        this.studentID = studentID;
+        this.courseID = courseID;
         this.registerTime = registerTime;
         this.status = status;
         this.notes = notes;
     }
 
-    public Student getStudent() {
-        return student;
+    public long getStudentID() {
+        return studentID;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public void setStudentID(long studentDBID) {
+        this.studentID = studentDBID;
     }
 
-    public Course getCourse() {
-        return course;
+    public long getCourseID() {
+        return courseID;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public void setCourseID(long courseID) {
+        this.courseID = courseID;
     }
 
     public Timestamp getRegisterTime() {
