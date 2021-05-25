@@ -25,7 +25,6 @@ public class SemesterScreen extends JFrame implements ActionListener {
     private JPopupMenu popupMenu;
     private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, setCurrentSemesterMenuItem;
 
-    private static JFrame AppFrame;
     private DefaultTableModel tableModel;
 
     private static final String ObjectName = "Học kì"; //Name of the current managed object type to display
@@ -38,54 +37,15 @@ public class SemesterScreen extends JFrame implements ActionListener {
     Object[] columnLabels = {"ID", "Học kì", "Năm", "Ngày bắt đầu", "Ngày kết thúc"};
     private static final int[] DISABLE_SORT_COLUMN_INDEXES = {COLUMN_NAME, COLUMN_DATE_START, COLUMN_DATE_END};
 
-    private static SemesterScreen instance;
-
-    public static SemesterScreen getInstance() {
-        if (instance == null) {
-            instance = new SemesterScreen();
-        }
-        return instance;
-    }
-
-    public static void destroyInstance() {
-        if (AppFrame != null) {
-            AppFrame.dispose();
-        }
-        if (instance != null) {
-            instance.dispose();
-            instance = null;
-        }
-    }
-
-    private SemesterScreen() {
+    public SemesterScreen() {
         refreshTxtCurrentSemester();    //Display current semester text
         initTable();
         initBtnListeners();
-        refreshData();
     }
 
-    public void openInNewWindow() {
-        //Allow only one screen instance at a time
-        if (AppFrame == null) {
-            AppFrame = new JFrame("Quản lý " + ObjectName);
-            AppFrame.setContentPane(this.mainPanel);
-            AppFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            AppFrame.addWindowListener(new WindowListener() {
-                @Override public void windowClosed(WindowEvent e) {
-                    instance = null;    //Free up space used by Screen instance
-                }
-                //Required methods
-                @Override public void windowOpened(WindowEvent e) {}
-                @Override public void windowClosing(WindowEvent e) {}
-                @Override public void windowIconified(WindowEvent e) {}
-                @Override public void windowDeiconified(WindowEvent e) {}
-                @Override public void windowActivated(WindowEvent e) {}
-                @Override public void windowDeactivated(WindowEvent e) {}
-            });
-            AppFrame.pack();
-            AppFrame.setLocationRelativeTo(null);
-        }
-        AppFrame.setVisible(true);
+    public JPanel getMainPanel() { return this.mainPanel; }
+    public void removeData() {
+        removeTableData();
     }
 
     private void initTable() {
@@ -181,7 +141,7 @@ public class SemesterScreen extends JFrame implements ActionListener {
     /**
      * Refresh table with data from Database
      */
-    private void refreshData() {
+    public void refreshData() {
         try {
             List<Semester> SemesterList = SemesterDAO.getAll();
             setTableData(SemesterList);
@@ -212,6 +172,9 @@ public class SemesterScreen extends JFrame implements ActionListener {
         }
     }
 
+    private void removeTableData() {
+        tableModel.setRowCount(0);
+    }
 
     private void addNewSemester() {
         openSemesterEditDialog(null);

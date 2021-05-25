@@ -73,11 +73,16 @@ public class CourseScreen extends JFrame implements ActionListener {
         }
     }
 
-    private CourseScreen() {
+    public CourseScreen() {
         initStudentScreen();
         initTable();
         initBtnListeners();
-        refreshData();
+    }
+
+    public JPanel getMainPanel() { return this.mainPanel; }
+    public void removeData() {
+        courseStudentScreen.removeTableData();
+        removeTableData();
     }
 
     public void openInNewWindow() {
@@ -218,7 +223,7 @@ public class CourseScreen extends JFrame implements ActionListener {
         courseStudentScreen.setCourseID(courseID);
     }
 
-    private void refreshData() {
+    public void refreshData() {
         refreshCourseTable();
         refreshCurrentSemester();
     }
@@ -236,6 +241,10 @@ public class CourseScreen extends JFrame implements ActionListener {
     private void refreshCurrentSemester() {
         try {
             Semester semester = SemesterDAO.getCurrentSemester();
+            if (semester == null) {
+                DialogUtil.showWarningMessage("Chưa có học kì nào được đặt làm học kỳ hiện tại");
+                return;
+            }
             txtCurrentSemester.setText(semester.getSemesterYear() + " - " + semester.getSemesterName());
         } catch (Exception ex) {
             String msg = "Lỗi lấy thông tin Học Kỳ hiện tại\n";
@@ -249,7 +258,7 @@ public class CourseScreen extends JFrame implements ActionListener {
      * @param rows List data of rows to set
      */
     private void setTableData(List<Course> rows) {
-        tableModel.setRowCount(0);
+        removeTableData();
 
         for (Course row: rows) {
             Shift courseShift = row.getShift();
@@ -267,6 +276,10 @@ public class CourseScreen extends JFrame implements ActionListener {
             };
             tableModel.addRow(rowData);
         }
+    }
+
+    private void removeTableData() {
+        tableModel.setRowCount(0);
     }
 
 

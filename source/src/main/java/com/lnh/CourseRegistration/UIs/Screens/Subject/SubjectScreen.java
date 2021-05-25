@@ -39,7 +39,6 @@ public class SubjectScreen extends JFrame implements ActionListener {
     public SubjectScreen() {
         initTable();
         initBtnListeners();
-
     }
 
     public JPanel getMainPanel() { return this.mainPanel; }

@@ -61,11 +61,14 @@ public class SessionScreen extends JFrame implements ActionListener {
         }
     }
 
-    private SessionScreen() {
+    public SessionScreen() {
         refreshTxtCurrentSemester();    //Display current semester text
         initTable();
         initBtnListeners();
-        refreshData();
+    }
+    public JPanel getMainPanel() { return this.mainPanel; }
+    public void removeData() {
+        removeTableData();
     }
 
     public void openInNewWindow() {
@@ -180,7 +183,7 @@ public class SessionScreen extends JFrame implements ActionListener {
     /**
      * Refresh table with data from Database
      */
-    private void refreshData() {
+    public void refreshData() {
         refreshTxtCurrentSemester();
         try {
             List<RegistrationSession> RegistrationSessionList = RegistrationSessionDAO.getAll();
@@ -197,7 +200,7 @@ public class SessionScreen extends JFrame implements ActionListener {
      * @param registrationSessions List data of RegistrationSession to set
      */
     private void setTableData(List<RegistrationSession> registrationSessions) {
-        tableModel.setRowCount(0);
+        removeTableData();
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 
         for (RegistrationSession session: registrationSessions) {
@@ -210,6 +213,10 @@ public class SessionScreen extends JFrame implements ActionListener {
             };
             tableModel.addRow(rowData);
         }
+    }
+
+    private void removeTableData() {
+        tableModel.setRowCount(0);
     }
 
 

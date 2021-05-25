@@ -96,6 +96,12 @@ public class MenuStaff implements ActionListener {
         paneCard.add(subjectScreen.getMainPanel(), SCREEN_SUBJECT);
         classInfoScreen = new ClassInfoScreen();
         paneCard.add(classInfoScreen.getMainPanel(), SCREEN_CLASS);
+        semesterScreen = new SemesterScreen();
+        paneCard.add(semesterScreen.getMainPanel(), SCREEN_SEMESTER);
+        sessionScreen = new SessionScreen();
+        paneCard.add(sessionScreen.getMainPanel(), SCREEN_SESSION);
+        courseScreen = new CourseScreen();
+        paneCard.add(courseScreen.getMainPanel(), SCREEN_COURSE);
 
         cardLayout = (CardLayout) paneCard.getLayout();
         showStaffScreen();
@@ -160,15 +166,21 @@ public class MenuStaff implements ActionListener {
     }
 
     private void showSemesterScreen() {
-        SemesterScreen.getInstance().openInNewWindow();
+        removeAllExceptScreen(SCREEN_SEMESTER);
+        semesterScreen.refreshData();
+        cardLayout.show(paneCard, SCREEN_SEMESTER);
     }
 
     private void showSessionScreen() {
-        SessionScreen.getInstance().openInNewWindow();
+        removeAllExceptScreen(SCREEN_SESSION);
+        sessionScreen.refreshData();
+        cardLayout.show(paneCard, SCREEN_SESSION);
     }
 
     private void showCourseScreen() {
-        CourseScreen.getInstance().openInNewWindow();
+        removeAllExceptScreen(SCREEN_COURSE);
+        courseScreen.refreshData();
+        cardLayout.show(paneCard, SCREEN_COURSE);
     }
 
     private void removeAllExceptScreen(String screenName) {
@@ -183,13 +195,13 @@ public class MenuStaff implements ActionListener {
             classInfoScreen.removeData();
         }
         if (!screenName.equals(SCREEN_SEMESTER)) {
-
+            semesterScreen.removeData();
         }
         if (!screenName.equals(SCREEN_SESSION)) {
-
+            sessionScreen.removeData();
         }
         if (!screenName.equals(SCREEN_COURSE)) {
-
+            courseScreen.removeData();
         }
     }
 }
