@@ -25,7 +25,6 @@ public class SubjectScreen extends JFrame implements ActionListener {
     private JPopupMenu popupMenu;
     private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, searchMenuItem;
 
-    private static JFrame AppFrame;
     private DefaultTableModel tableModel;
 
     private static final String ObjectName = "Môn học"; //Name of the current managed object type to display
@@ -37,53 +36,18 @@ public class SubjectScreen extends JFrame implements ActionListener {
     Object[] columnLabels = {"ID", "Mã Môn học", "Tên Môn học", "Số Tín chỉ"};
     private static final int[] DISABLE_SORT_COLUMN_INDEXES = {COLUMN_NAME};
 
-    private static SubjectScreen instance;
-
-    public static SubjectScreen getInstance() {
-        if (instance == null) {
-            instance = new SubjectScreen();
-        }
-        return instance;
-    }
-
-    public static void destroyInstance() {
-        if (AppFrame != null) {
-            AppFrame.dispose();
-        }
-        if (instance != null) {
-            instance.dispose();
-            instance = null;
-        }
-    }
-
-    private SubjectScreen() {
+    public SubjectScreen() {
         initTable();
         initBtnListeners();
-        refreshSubjectTable();
+
     }
 
-    public void openInNewWindow() {
-        //Allow only one screen instance at a time
-        if (AppFrame == null) {
-            AppFrame = new JFrame("Quản lý " + ObjectName);
-            AppFrame.setContentPane(this.mainPanel);
-            AppFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            AppFrame.addWindowListener(new WindowListener() {
-                @Override public void windowClosed(WindowEvent e) {
-                    instance = null;    //Free up space used by Screen instance
-                }
-                //Required methods
-                @Override public void windowOpened(WindowEvent e) {}
-                @Override public void windowClosing(WindowEvent e) {}
-                @Override public void windowIconified(WindowEvent e) {}
-                @Override public void windowDeiconified(WindowEvent e) {}
-                @Override public void windowActivated(WindowEvent e) {}
-                @Override public void windowDeactivated(WindowEvent e) {}
-            });
-            AppFrame.pack();
-            AppFrame.setLocationRelativeTo(null);
-        }
-        AppFrame.setVisible(true);
+    public JPanel getMainPanel() { return this.mainPanel; }
+    public void refreshData() {
+        refreshSubjectTable();
+    }
+    public void removeData() {
+        removeTableData();
     }
 
     private void initTable() {
@@ -192,7 +156,7 @@ public class SubjectScreen extends JFrame implements ActionListener {
      * @param SubjectList List data of Subject to set
      */
     private void setTableData(List<Subject> SubjectList) {
-        tableModel.setRowCount(0);
+        removeTableData();
 
         for (Subject Subject: SubjectList) {
             Object[] rowData = {
@@ -203,6 +167,10 @@ public class SubjectScreen extends JFrame implements ActionListener {
             };
             tableModel.addRow(rowData);
         }
+    }
+
+    private void removeTableData() {
+        tableModel.setRowCount(0);
     }
 
 
@@ -283,7 +251,8 @@ public class SubjectScreen extends JFrame implements ActionListener {
         );
 
         if (option == JOptionPane.YES_OPTION) {
-            String value = txtSearchValue.getText().trim();
+            String searchValue = txtSearchValue.getText();
+            String value = searchValue == null ? null:searchValue.trim();
             if (value != null && value.length() > 0) {
                 try {
                     List<Subject> subjectList;

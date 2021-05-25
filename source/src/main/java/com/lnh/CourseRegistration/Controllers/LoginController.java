@@ -189,11 +189,5 @@ public class LoginController {
         logInAccountType = Account.ACCOUNT_INVALID;
         currentLogInStudent = null;
         currentLogInStaff = null;
-
-        ClassInfoScreen.destroyInstance();
-        SessionScreen.destroyInstance();
-        SemesterScreen.destroyInstance();
-        StaffScreen.destroyInstance();
-        SubjectScreen.destroyInstance();
     }
 }

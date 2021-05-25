@@ -24,7 +24,6 @@ public class StaffScreen extends JFrame implements ActionListener {
     private JPopupMenu popupMenu;
     private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, searchMenuItem;
 
-    private static JFrame AppFrame;
     private DefaultTableModel tableModel;
 
     private static final String ObjectName = "Giáo vụ"; //Name of the current managed object type to display
@@ -35,53 +34,17 @@ public class StaffScreen extends JFrame implements ActionListener {
     Object[] columnLabels = {"ID", "Họ tên", "Tên đăng nhập"};
     private static final int[] DISABLE_SORT_COLUMN_INDEXES = {COLUMN_NAME, COLUMN_USERNAME};
 
-    private static StaffScreen instance;
-
-    public static StaffScreen getInstance() {
-        if (instance == null) {
-            instance = new StaffScreen();
-        }
-        return instance;
-    }
-
-    public static void destroyInstance() {
-        if (AppFrame != null) {
-            AppFrame.dispose();
-        }
-        if (instance != null) {
-            instance.dispose();
-            instance = null;
-        }
-    }
-
-    private StaffScreen() {
+    public StaffScreen() {
         initTable();
         initBtnListeners();
-        refreshStaffTable();
     }
 
-    public void openInNewWindow() {
-        //Allow only one screen instance at a time
-        if (AppFrame == null) {
-            AppFrame = new JFrame("Quản lý " + ObjectName);
-            AppFrame.setContentPane(this.mainPanel);
-            AppFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            AppFrame.addWindowListener(new WindowListener() {
-                @Override public void windowClosed(WindowEvent e) {
-                    instance = null;    //Free up space used by Screen instance
-                }
-                //Required methods
-                @Override public void windowOpened(WindowEvent e) {}
-                @Override public void windowClosing(WindowEvent e) {}
-                @Override public void windowIconified(WindowEvent e) {}
-                @Override public void windowDeiconified(WindowEvent e) {}
-                @Override public void windowActivated(WindowEvent e) {}
-                @Override public void windowDeactivated(WindowEvent e) {}
-            });
-            AppFrame.pack();
-            AppFrame.setLocationRelativeTo(null);
-        }
-        AppFrame.setVisible(true);
+    public JPanel getMainPanel() { return this.mainPanel; }
+    public void refreshData() {
+        refreshStaffTable();
+    }
+    public void removeData() {
+        removeTableData();
     }
 
     private void initTable() {
@@ -188,7 +151,7 @@ public class StaffScreen extends JFrame implements ActionListener {
      * @param staffList List data of staff to set
      */
     private void setTableData(List<Staff> staffList) {
-        tableModel.setRowCount(0);
+        removeTableData();
 
         for (Staff staff: staffList) {
             Object[] rowData = {
@@ -198,6 +161,10 @@ public class StaffScreen extends JFrame implements ActionListener {
             };
             tableModel.addRow(rowData);
         }
+    }
+
+    private void removeTableData() {
+        tableModel.setRowCount(0);
     }
 
 
@@ -229,7 +196,7 @@ public class StaffScreen extends JFrame implements ActionListener {
         }
 
         String msg = "Xóa " + ObjectName + " có ID: " + staffID + "?";
-        int option = JOptionPane.showConfirmDialog(this, msg);
+        int option = JOptionPane.showConfirmDialog(this.getMainPanel(), msg);
 
         if (option == JOptionPane.YES_OPTION) {
             try {
@@ -248,6 +215,7 @@ public class StaffScreen extends JFrame implements ActionListener {
      */
     private void openStaffEditDialog(Staff aStaff) {
         //Dialog so that it block staff screen
+        //Have to be this else will break things
         new FormEditStaff(this, aStaff);
         refreshStaffTable();
     }

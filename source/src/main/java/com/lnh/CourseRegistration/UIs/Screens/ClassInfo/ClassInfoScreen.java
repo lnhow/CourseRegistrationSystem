@@ -28,7 +28,6 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
     private JPopupMenu popupMenu;
     private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, searchMenuItem, selectMenuItem;
 
-    private static JFrame AppFrame;
     private DefaultTableModel tableModel;
 
     private static final String ObjectName = "Lớp học"; //Name of the current managed object type to display
@@ -40,54 +39,19 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
     private static final int COLUMN_FEMALE = 4;
     Object[] columnLabels = {"ID", "Lớp học", "Sỉ số", "Sỉ số Nam", "Sỉ số Nữ"};
 
-    private static ClassInfoScreen instance;
-
-    public static ClassInfoScreen getInstance() {
-        if (instance == null) {
-            instance = new ClassInfoScreen();
-        }
-        return instance;
-    }
-
-    public static void destroyInstance() {
-        if (AppFrame != null) {
-            AppFrame.dispose();
-        }
-        if (instance != null) {
-            instance.dispose();
-            instance = null;
-        }
-    }
-
-    private ClassInfoScreen() {
+    public ClassInfoScreen() {
         initStudentScreen();
         initTable();
         initBtnListeners();
-        refreshClassInfoTable();
     }
 
-    public void openInNewWindow() {
-        //Allow only one screen instance at a time
-        if (AppFrame == null) {
-            AppFrame = new JFrame("Quản lý " + ObjectName);
-            AppFrame.setContentPane(this.mainPanel);
-            AppFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            AppFrame.addWindowListener(new WindowListener() {
-                @Override public void windowClosed(WindowEvent e) {
-                    instance = null;    //Free up space used by Screen instance
-                }
-                //Required methods
-                @Override public void windowOpened(WindowEvent e) {}
-                @Override public void windowClosing(WindowEvent e) {}
-                @Override public void windowIconified(WindowEvent e) {}
-                @Override public void windowDeiconified(WindowEvent e) {}
-                @Override public void windowActivated(WindowEvent e) {}
-                @Override public void windowDeactivated(WindowEvent e) {}
-            });
-            AppFrame.pack();
-            AppFrame.setLocationRelativeTo(null);
-        }
-        AppFrame.setVisible(true);
+    public JPanel getMainPanel() { return this.mainPanel; }
+    public void refreshData() {
+        refreshClassInfoTable();
+    }
+    public void removeData() {
+        removeTableData();
+        studentScreen.removeTableData();
     }
 
     private void initStudentScreen() {
@@ -215,7 +179,7 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
      * @param rows List data of rows to set
      */
     private void setTableData(List<Object[]> rows) {
-        tableModel.setRowCount(0);
+        removeTableData();
 
         for (Object[] row: rows) {
             ClassInfo classInfo = (ClassInfo) row[0];
@@ -231,6 +195,10 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
             };
             tableModel.addRow(rowData);
         }
+    }
+
+    private void removeTableData() {
+        tableModel.setRowCount(0);
     }
 
 
