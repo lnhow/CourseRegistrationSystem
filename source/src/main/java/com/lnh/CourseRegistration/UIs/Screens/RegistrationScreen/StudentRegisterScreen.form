@@ -10,7 +10,7 @@
       <splitpane id="d8d59">
         <constraints border-constraint="Center"/>
         <properties>
-          <dividerLocation value="282"/>
+          <dividerLocation value="400"/>
           <orientation value="0"/>
         </properties>
         <border type="none"/>
@@ -102,7 +102,7 @@
                 <properties/>
                 <border type="none"/>
                 <children>
-                  <component id="5630e" class="javax.swing.JButton" binding="btnCancelled">
+                  <component id="5630e" class="javax.swing.JButton" binding="btnCancel">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>

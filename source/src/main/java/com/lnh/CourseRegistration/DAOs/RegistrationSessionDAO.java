@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 public class RegistrationSessionDAO {
@@ -99,6 +100,35 @@ public class RegistrationSessionDAO {
 
             Query query = session.createQuery(hql);
             query.setParameter("session_id", registrationSessionID);
+            List<RegistrationSession> list = query.list();
+
+            if (list != null && list.size() > 0) {
+                result = list.get(0);
+            }
+
+        } catch (HibernateException ex) {
+            HelperUtils.throwException(ex.getMessage());
+        } finally {
+            session.close();
+        }
+
+        return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static RegistrationSession getOpenSession(Timestamp timestamp) throws Exception {
+        RegistrationSession result = null;
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+
+        try {
+            String hql = "SELECT session" +
+                    " FROM RegistrationSession session" +
+                    " WHERE :date BETWEEN session.sessionStart AND session.sessionEnd" +
+                    " ORDER BY session.sessionStart DESC";
+
+            Query query = session.createQuery(hql);
+            query.setParameter("date", timestamp);
             List<RegistrationSession> list = query.list();
 
             if (list != null && list.size() > 0) {

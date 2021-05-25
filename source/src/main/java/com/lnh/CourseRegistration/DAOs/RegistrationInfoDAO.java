@@ -210,6 +210,35 @@ public class RegistrationInfoDAO {
         return list;
     }
 
+    /**
+     * Get all registration info associated with Student
+     * @param studentDBID DatabaseID of Student associated
+     * @return List of Object[] (Object[0]: RegistrationInfo, Object[1]: Course in RegistrationInfo)
+     * */
+    public static List<Object[]> getOfStudentInCurrentSemester(long studentDBID) throws Exception {
+        List<Object[]> list = null;
+        SessionFactory factory = HibernateUtil.getSessionFactory();
+        Session session = factory.openSession();
+
+        try {
+            String hql = "SELECT info, course" +
+                    " FROM RegistrationInfo info" +
+                    " LEFT JOIN Course course" +
+                    " ON course.id = info.courseID" +
+                    " WHERE info.studentID = :studentDBID" +
+                    " AND course.semester.isCurrentSemester = true";
+            Query<Object[]> query = session.createQuery(hql);
+            query.setParameter("studentDBID", studentDBID);
+            list = query.list();
+        } catch (HibernateException ex) {
+            HelperUtils.throwException(ex.getMessage());
+        } finally {
+            session.close();
+        }
+
+        return list;
+    }
+
     public static void insert(RegistrationInfo info) throws Exception {
         Session session = HibernateUtil.getSessionFactory().openSession();
 

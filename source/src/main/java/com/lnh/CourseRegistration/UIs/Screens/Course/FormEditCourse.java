@@ -6,6 +6,7 @@ import com.lnh.CourseRegistration.Entities.SupportEntities.Shift;
 import com.lnh.CourseRegistration.Entities.SupportEntities.Weekday;
 import com.lnh.CourseRegistration.Utils.AutoCompletion;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
+import com.lnh.CourseRegistration.Utils.HelperUtils;
 
 import javax.swing.*;
 import javax.swing.text.DefaultFormatterFactory;
@@ -111,6 +112,7 @@ public class FormEditCourse extends JDialog {
         boolean isSuccess = true;
         try {
             currentSemester = fetchCurrentSemester();
+
             listClass = fetchClassInfo();
             listShift = fetchShift();
             listWeekday = fetchWeekday();
@@ -123,7 +125,11 @@ public class FormEditCourse extends JDialog {
     }
 
     private Semester fetchCurrentSemester() throws Exception {
-        return SemesterDAO.getCurrentSemester();
+        Semester current = SemesterDAO.getCurrentSemester();
+        if (current == null) {
+            HelperUtils.throwException("Chưa có học kỳ nào được đặt là học kỳ hiện tại");
+        }
+        return current;
     }
 
     private List<ClassInfo> fetchClassInfo() throws Exception {

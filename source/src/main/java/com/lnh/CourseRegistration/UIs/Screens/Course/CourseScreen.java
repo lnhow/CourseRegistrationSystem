@@ -5,10 +5,8 @@ import com.lnh.CourseRegistration.DAOs.SemesterDAO;
 import com.lnh.CourseRegistration.DAOs.SubjectDAO;
 import com.lnh.CourseRegistration.Entities.Course;
 import com.lnh.CourseRegistration.Entities.Semester;
-import com.lnh.CourseRegistration.Entities.Subject;
 import com.lnh.CourseRegistration.Entities.SupportEntities.Shift;
 import com.lnh.CourseRegistration.UIs.Screens.RegistrationScreen.CourseStudentScreen;
-import com.lnh.CourseRegistration.UIs.Screens.Student.StudentScreen;
 import com.lnh.CourseRegistration.Utils.CustomComparator;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
 
@@ -54,25 +52,6 @@ public class CourseScreen extends JFrame implements ActionListener {
             COLUMN_MAX_SLOT, COLUMN_TEACHER, COLUMN_TIME, COLUMN_ROOM
     };
 
-    private static CourseScreen instance;
-
-    public static CourseScreen getInstance() {
-        if (instance == null) {
-            instance = new CourseScreen();
-        }
-        return instance;
-    }
-
-    public static void destroyInstance() {
-        if (AppFrame != null) {
-            AppFrame.dispose();
-        }
-        if (instance != null) {
-            instance.dispose();
-            instance = null;
-        }
-    }
-
     public CourseScreen() {
         initStudentScreen();
         initTable();
@@ -83,31 +62,6 @@ public class CourseScreen extends JFrame implements ActionListener {
     public void removeData() {
         courseStudentScreen.removeTableData();
         removeTableData();
-    }
-
-    public void openInNewWindow() {
-        //Allow only one screen instance at a time
-        if (AppFrame == null) {
-            AppFrame = new JFrame("Quản lý " + ObjectName);
-            AppFrame.setContentPane(this.mainPanel);
-            AppFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            AppFrame.addWindowListener(new WindowListener() {
-                @Override public void windowClosed(WindowEvent e) {
-                    instance = null;    //Free up space used by Screen instance
-                }
-                //Required methods
-                @Override public void windowOpened(WindowEvent e) {}
-                @Override public void windowClosing(WindowEvent e) {}
-                @Override public void windowIconified(WindowEvent e) {}
-                @Override public void windowDeiconified(WindowEvent e) {}
-                @Override public void windowActivated(WindowEvent e) {}
-                @Override public void windowDeactivated(WindowEvent e) {}
-            });
-            AppFrame.pack();
-            AppFrame.setLocationRelativeTo(null);
-        }
-        AppFrame.setVisible(true);
-        AppFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
 
     private void initStudentScreen() {
