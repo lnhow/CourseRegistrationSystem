@@ -25,12 +25,6 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.20</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/com.toedter/jcalendar -->
-        <dependency>
-            <groupId>com.toedter</groupId>
-            <artifactId>jcalendar</artifactId>
-            <version>1.4</version>
-        </dependency>
         <dependency>
             <groupId>com.github.lgooddatepicker</groupId>
             <artifactId>LGoodDatePicker</artifactId>

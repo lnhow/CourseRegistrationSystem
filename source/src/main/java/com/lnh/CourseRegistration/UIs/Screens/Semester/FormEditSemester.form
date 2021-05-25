@@ -92,14 +92,6 @@
                   <text value="Ngày kết thúc"/>
                 </properties>
               </component>
-              <grid id="6be51" binding="holderYear" layout-manager="BorderLayout" hgap="0" vgap="0">
-                <constraints>
-                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties/>
-                <border type="none"/>
-                <children/>
-              </grid>
               <component id="373bc" class="com.github.lgooddatepicker.components.DatePicker" binding="pickerStart">
                 <constraints>
                   <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
@@ -109,6 +101,12 @@
               <component id="81b93" class="com.github.lgooddatepicker.components.DatePicker" binding="pickerEnd">
                 <constraints>
                   <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+              </component>
+              <component id="b382e" class="javax.swing.JComboBox" binding="pickerYear">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties/>
               </component>

@@ -26,19 +26,19 @@ public class Course {
     @JoinColumn(name = "Subject")
     private Subject subject;
 
-    @OneToOne
+    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinColumn(name = "ClassID")
     private ClassInfo classInfo;
 
-    @OneToOne
+    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinColumn(name = "Weekday")
     private Weekday weekday;
 
-    @OneToOne
+    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinColumn(name = "Shift")
     private Shift shift;
 
-    @OneToOne
+    @OneToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
     @JoinColumn(name = "SemesterID")
     private Semester semester;
 

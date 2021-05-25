@@ -1,33 +1,27 @@
 package com.lnh.CourseRegistration.UIs.Screens.Semester;
 
 import com.github.lgooddatepicker.components.DatePicker;
-import com.github.lgooddatepicker.components.DateTimePicker;
 import com.lnh.CourseRegistration.DAOs.SemesterDAO;
 import com.lnh.CourseRegistration.Entities.Semester;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
-import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JYearChooser;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Year;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.stream.IntStream;
 
 public class FormEditSemester extends JDialog {
     private JPanel mainPanel;
     private JTextField txtName;
     private JTextField txtID;
     private JButton btnSave;
-    private JPanel holderYear;
     private DatePicker pickerStart;
     private DatePicker pickerEnd;
-
-    //Year pickers
-    private JYearChooser chooserYear;
+    private JComboBox<Integer> pickerYear;
 
     private SemesterScreen parent;
     private Semester currentSemester;   //Current Semester to edit
@@ -57,9 +51,7 @@ public class FormEditSemester extends JDialog {
     }
 
     private void initComponents() {
-        chooserYear = new JYearChooser();
-
-        holderYear.add(chooserYear, BorderLayout.CENTER);
+        initYearPicker();
         refreshTextFields();
 
         if (isNewScreen) {
@@ -77,6 +69,15 @@ public class FormEditSemester extends JDialog {
         });
     }
 
+    private void initYearPicker() {
+        int limit = 10; //Limit of years before and after current year
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        Integer[] yearList = IntStream.rangeClosed(
+                currentYear - limit, currentYear + limit
+        ).boxed().toArray(Integer[]::new);  //Boxed to wrapper class & to array with wrapper array constructor
+        pickerYear.setModel(new DefaultComboBoxModel<Integer>(yearList));
+    }
+
     private void initWindow() {
         setContentPane(this.mainPanel);
         getRootPane().setDefaultButton(btnSave);    //Allow btn to trigger if hit Enter
@@ -89,7 +90,7 @@ public class FormEditSemester extends JDialog {
     private void refreshTextFields() {
         txtID.setText(Integer.toString(currentSemester.getId()));
         txtName.setText(currentSemester.getSemesterName());
-        chooserYear.setYear(currentSemester.getSemesterYear());
+        pickerYear.setSelectedItem(currentSemester.getSemesterYear());
 
         pickerStart.setDate(new java.sql.Date(currentSemester.getSemesterStart().getTime()).toLocalDate());
         pickerEnd.setDate(new java.sql.Date(currentSemester.getSemesterEnd().getTime()).toLocalDate());
@@ -99,7 +100,7 @@ public class FormEditSemester extends JDialog {
     //Handler methods----------------------------------------------------------------------------
     private void saveInfo() {
         String name = txtName.getText();
-        int year = chooserYear.getYear();
+        Integer year = (Integer) pickerYear.getSelectedItem();
 
 
         LocalDate dateStart = pickerStart.getDate();
@@ -113,6 +114,9 @@ public class FormEditSemester extends JDialog {
             return;
         } else if (name.equals("")) {
             DialogUtil.showWarningMessage("Tên Học kỳ không được để trống");
+            return;
+        } else if (year == null) {
+            DialogUtil.showWarningMessage("Năm học kỳ không được để trống");
             return;
         }
 

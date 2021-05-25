@@ -240,7 +240,8 @@ public class SemesterScreen extends JFrame implements ActionListener {
             return;
         }
 
-        String msg = "Xóa " + ObjectName + " có ID: " + semesterID + "?";
+        String msg = "Xóa " + ObjectName + " có ID: " + semesterID + "?" +
+                "\n Hành động này sẽ xóa tất cả thông tin liên quan đến học kì này (Khóa học)";
         int option = JOptionPane.showConfirmDialog(this, msg);
 
         if (option == JOptionPane.YES_OPTION) {
