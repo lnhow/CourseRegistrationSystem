@@ -28,6 +28,12 @@ public class RegistrationInfoController {
             "Không thể duyệt";
     public static final String COURSE_CANNOT_REEVALUATE_ERR_MSG =
             "Không thể hoàn tác";
+    public static final String ERR_NO_COURSE_WITH_ID = "Lỗi không tìm thấy Khóa học";
+    public static final String ERR_NO_STUDENT_WITH_ID = "Lỗi không tìm thấy Sinh viên có DBID";
+    public static final String ERR_MAX_REGISTERED_ALREADY = "Đã đến số học phần tối đa";
+    public static final String ERR_REGISTERED_ALREADY = "Đã đăng ký học phần này rồi";
+    public static final String ERR_CONFLICT_TIME = "Trùng giờ học";
+    public static final String ERR_COURSE_MAXED_SLOT_ALREADY = "Đã đến tối đa số lượt có thể đăng ký";
 
     public static void registerCourse(long courseID) throws Exception {
         long studentDBID = getLoggedInStudentDBID();
@@ -35,17 +41,7 @@ public class RegistrationInfoController {
             return;
         }
 
-        RegistrationInfo info = new RegistrationInfo();
-        info.setCourseID(courseID);
-        info.setStudentID(studentDBID);
-        info.setRegisterTime(Timestamp.valueOf(LocalDateTime.now(Clock.systemDefaultZone())));
-        info.setStatus(RegisterStatusDAO.getStatus(RegisterStatus.STATUS_WAITING));
-
-        if (RegistrationInfoDAO.getByID(studentDBID, courseID) == null) {
-            RegistrationInfoDAO.insert(info);
-        } else {
-            RegistrationInfoDAO.update(info);
-        }
+        RegistrationInfoDAO.register(studentDBID, courseID);
     }
 
     public static void cancelCourseByStudent(long courseID) throws Exception {

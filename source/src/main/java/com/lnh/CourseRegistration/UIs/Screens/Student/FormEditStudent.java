@@ -145,14 +145,13 @@ public class FormEditStudent extends JDialog {
             return;
         }
 
-        //Set default username
-        if (currentStudent.getAccount().getUsername().equals("")) {
+        if (isNewScreen) {
+            //Set default username
             currentStudent.getAccount().setUsername(id);
-        }
-
-        //Set default password
-        if (currentStudent.getAccount().getPassword().equals("")) {
-            currentStudent.getAccount().setPassword(username);
+            //Set default password
+            currentStudent.getAccount().setPassword(
+                    currentStudent.getAccount().getUsername()
+            );
         }
 
         currentStudent.setId(id);
@@ -196,6 +195,10 @@ public class FormEditStudent extends JDialog {
         } catch (Exception ex) {
             String errorMessage = "Lỗi không lưu được:\n"+ex.getMessage();
             DialogUtil.showErrorMessage(errorMessage);
+            if (isNewScreen) {
+                currentStudent.getAccount().setUsername("");
+                currentStudent.getAccount().setPassword("");
+            }
             return;
         }
 

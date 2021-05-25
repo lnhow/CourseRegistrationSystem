@@ -1,11 +1,14 @@
 package com.lnh.CourseRegistration.UIs.Screens.RegistrationScreen;
 
+import com.lnh.CourseRegistration.App;
 import com.lnh.CourseRegistration.Controllers.LoginController;
+import com.lnh.CourseRegistration.Controllers.RegistrationInfoController;
 import com.lnh.CourseRegistration.DAOs.CourseDAO;
 import com.lnh.CourseRegistration.DAOs.RegistrationInfoDAO;
 import com.lnh.CourseRegistration.Entities.Course;
 import com.lnh.CourseRegistration.Entities.RegistrationInfo;
 import com.lnh.CourseRegistration.Entities.Student;
+import com.lnh.CourseRegistration.Entities.SupportEntities.RegisterStatus;
 import com.lnh.CourseRegistration.Entities.SupportEntities.Shift;
 import com.lnh.CourseRegistration.Utils.CustomComparator;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
@@ -19,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StudentRegisterScreen implements ActionListener {
@@ -41,20 +45,21 @@ public class StudentRegisterScreen implements ActionListener {
     private static final int COLUMN_SUBJECT_SHORT = 1;
     private static final int COLUMN_SUBJECT = 2;
     private static final int COLUMN_CLASS = 3;
-    private static final int COLUMN_MAX_SLOT = 4;
-    private static final int COLUMN_ROOM = 5;
-    private static final int COLUMN_TEACHER = 6;
-    private static final int COLUMN_TIME = 7;
-    private static final int COLUMN_STATUS = 8;
-    private static final int COLUMN_REGISTER_TIME = 9;
-    Object[] columnLabels = {"ID", "Mã môn", "Môn học", "Lớp", "Tối đa", "Phòng", "Giảng viên", "Giờ học"};
+    private static final int COLUMN_SLOT = 4;
+    private static final int COLUMN_MAX_SLOT = 5;
+    private static final int COLUMN_ROOM = 6;
+    private static final int COLUMN_TEACHER = 7;
+    private static final int COLUMN_TIME = 8;
+    private static final int COLUMN_STATUS = 4;
+    private static final int COLUMN_REGISTER_TIME = 5;
+    Object[] columnLabels = {"ID", "Mã môn", "Môn học", "Lớp", "Sỉ số", "Tối đa", "Phòng", "Giảng viên", "Giờ học"};
     private static final int[] DISABLE_SORT_COLUMN_INDEXES = {
-            COLUMN_MAX_SLOT, COLUMN_TEACHER, COLUMN_TIME, COLUMN_ROOM
+            COLUMN_SLOT, COLUMN_MAX_SLOT, COLUMN_TEACHER, COLUMN_TIME, COLUMN_ROOM
     };
-    Object[] columnExtraLabels = {"ID", "Mã môn", "Môn học", "Lớp",
-            "Tối đa", "Phòng", "Giảng viên", "Giờ học", "Tình trạng", "TG Đăng ký"};
+    Object[] columnExtraLabels = {"ID", "Mã môn", "Môn học", "Lớp", "Tình trạng", "TG Đăng ký",
+            "Phòng", "Giảng viên", "Giờ học"};
     private static final int[] DISABLE_SORT_EXTRA_COLUMN_INDEXES = {
-            COLUMN_MAX_SLOT, COLUMN_TEACHER, COLUMN_TIME, COLUMN_ROOM, COLUMN_STATUS
+            COLUMN_TEACHER, COLUMN_TIME, COLUMN_ROOM, COLUMN_STATUS
     };
 
     public StudentRegisterScreen() {
@@ -117,7 +122,7 @@ public class StudentRegisterScreen implements ActionListener {
         //Sorter-----------------------------------------------------------------------------
         TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(tableModel);
 
-        for (int index: DISABLE_SORT_COLUMN_INDEXES) {
+        for (int index: DISABLE_SORT_EXTRA_COLUMN_INDEXES) {
             sorter.setSortable(index, false);
         }
 
@@ -192,7 +197,6 @@ public class StudentRegisterScreen implements ActionListener {
 
     //Popup menu-----------------------------------------------------------------
 
-
     private void initBtnListeners() {
         btnRegister.addActionListener(this);
         btnCancel.addActionListener(this);
@@ -205,9 +209,9 @@ public class StudentRegisterScreen implements ActionListener {
         Object source = e.getSource();
 
         if (source == btnRegister || source == registerMenuItem) {
-
+            registerCourse();
         } else if (source == btnCancel || source == cancelMenuItem) {
-
+            cancelCourse();
         } else if (source == refreshRegister) {
             refreshTableRegister();
         } else if (source == refreshRegistered) {
@@ -228,7 +232,7 @@ public class StudentRegisterScreen implements ActionListener {
 
     private void refreshTableRegister() {
         try {
-            List<Course> rows = CourseDAO.getAllInCurrentSemester();
+            List<Object[]> rows = CourseDAO.getAllInCurrentSemesterWithInfo();
             setTableRegisterData(rows);
         } catch (Exception ex) {
             String msg = "Lỗi không lấy được danh sách " + ObjectName +"\n";
@@ -243,7 +247,10 @@ public class StudentRegisterScreen implements ActionListener {
                 HelperUtils.throwException("Không lấy được thông tin sinh viên");
             }
 
-            List<Object[]> rows = RegistrationInfoDAO.getOfStudentInCurrentSemester(student.getStudentNo());
+            List<Object[]> rows = RegistrationInfoDAO.getOfStudentInCurrentSemester(
+                    student.getStudentNo(),
+                    Arrays.asList(RegisterStatus.STATUS_WAITING, RegisterStatus.STATUS_CONFIRMED)
+            );
             setTableRegisteredData(rows);
         } catch (Exception ex) {
             String msg = "Lỗi không lấy được danh sách " + ObjectName +"\n";
@@ -258,8 +265,8 @@ public class StudentRegisterScreen implements ActionListener {
      * Remove current datas
      * */
     public void removeData() {
-        removeTableRegisterData();
         removeTableRegisteredData();
+        removeTableRegisterData();
     }
 
     private void removeTableRegisterData() {
@@ -269,21 +276,24 @@ public class StudentRegisterScreen implements ActionListener {
      * Set table data to list of rows
      * @param list List data of row to set
      */
-    private void setTableRegisterData(List<Course> list) {
+    private void setTableRegisterData(List<Object[]> list) {
         removeTableRegisterData();
 
-        for (Course row: list) {
-            Shift courseShift = row.getShift();
-            String time = row.getWeekday().getWeekdayName()
+        for (Object[] row: list) {
+            Course course = (Course) row[0];
+            Long count = (Long) row[1];
+            Shift courseShift = course.getShift();
+            String time = course.getWeekday().getWeekdayName()
                     + " ("+ courseShift.getShiftStart() +" - " + courseShift.getShiftEnd() +")";
             Object[] rowData = {
-                    row.getId(),
-                    row.getSubject().getShortName(),
-                    row.getSubject().getSubjectName(),
-                    row.getClassInfo().getClassName(),
-                    row.getMaxSlot(),
-                    row.getRoomName(),
-                    row.getTeacherName(),
+                    course.getId(),
+                    course.getSubject().getShortName(),
+                    course.getSubject().getSubjectName(),
+                    course.getClassInfo().getClassName(),
+                    count,
+                    course.getMaxSlot(),
+                    course.getRoomName(),
+                    course.getTeacherName(),
                     time
             };
             tableRegisterModel.addRow(rowData);
@@ -299,6 +309,13 @@ public class StudentRegisterScreen implements ActionListener {
      */
     private void setTableRegisteredData(List<Object[]> list) {
         removeTableRegisteredData();
+        if (list != null) {
+            lblLeft.setText(
+                    "Còn có thể đăng ký "
+                    + ((App.MAX_REGISTERED_COURSE > list.size()) ? (App.MAX_REGISTERED_COURSE - list.size()): 0)
+                    + " môn"
+            );
+        }
 
         for (Object[] row: list) {
             RegistrationInfo info = (RegistrationInfo) row[0];
@@ -311,86 +328,66 @@ public class StudentRegisterScreen implements ActionListener {
                     course.getSubject().getShortName(),
                     course.getSubject().getSubjectName(),
                     course.getClassInfo().getClassName(),
-                    course.getMaxSlot(),
+                    info.getStatus().getStatusDesc(),
+                    info.getRegisterTime().toLocalDateTime(),
                     course.getRoomName(),
                     course.getTeacherName(),
                     time,
-                    info.getStatus().getStatusDesc(),
-                    info.getRegisterTime().toLocalDateTime()
             };
             tableRegisteredModel.addRow(rowData);
         }
     }
 
     //Handling methods--------------------------------------------------------------------
+    private void registerCourse() {
+        long courseID = getSelectedIDFromRegister();
 
+        if (courseID == -1) {
+            DialogUtil.showInfoMessage("Vui lòng chọn 1 (một) " + ObjectName + " để đăng ký");
+            return;
+        }
 
-//    private void confirm() {
-//        List<Long> dbIDs = getSelectedIDsFromWaiting();
-//
-//        if (dbIDs.size() > 0) {
-//            String msg = "Xác nhận duyệt các ĐKHP này (Không thể hoàn tác)";
-//            int option = JOptionPane.showConfirmDialog(
-//                    this.mainPanel, msg, "Xác nhận duyệt", JOptionPane.OK_CANCEL_OPTION
-//            );
-//
-//            if (option != JOptionPane.YES_OPTION) {
-//                return;
-//            }
-//
-//            for (Long dbID: dbIDs) {
-//                try {
-//                    RegistrationInfoController.confirmCourseByStaff(dbID, currentCourseID);
-//                    refreshTableWaiting();
-//                    refreshTableConfirmed();
-//                } catch (Exception ex) {
-//                    try {
-//                        Student student = StudentDAO.getByID(dbID);
-//                        DialogUtil.showErrorMessage(
-//                                "Lỗi duyệt " + ObjectName + " " + student.getId() + "\n" + ex.getMessage()
-//                        );
-//                    } catch (Exception exception) {
-//                        DialogUtil.showErrorMessage(
-//                                "Lỗi duyệt "+ ObjectName + " có dbID " + dbID + "\n" + ex.getMessage());
-//                    }
-//                }
-//            }
-//        } else {
-//            DialogUtil.showInfoMessage("Vui lòng chọn ít nhất 1 (một) " + ObjectName + " để duyệt");
-//        }
-//    }
-//
-//    private void cancel() {
-//
-//        String msg = "Xác nhận hủy các ĐKHP này";
-//        int option = JOptionPane.showConfirmDialog(
-//                this.mainPanel, msg, "Xác nhận hủy", JOptionPane.OK_CANCEL_OPTION
-//        );
-//
-//        if (option != JOptionPane.YES_OPTION) {
-//            return;
-//        }
-//
-//        if (dbIDs.size() > 0) {
-//            for (Long dbID: dbIDs) {
-//                try {
-//
-//                } catch (Exception ex) {
-//                    try {
-//                        Student student = StudentDAO.getByID(dbID);
-//                        DialogUtil.showErrorMessage(
-//                                "Lỗi hủy " + ObjectName + " " + student.getId() + "\n" + ex.getMessage()
-//                        );
-//                    } catch (Exception exception) {
-//                        DialogUtil.showErrorMessage(
-//                                "Lỗi hủy "+ ObjectName + " có dbID " + dbID + "\n" + ex.getMessage());
-//                    }
-//                }
-//            }
-//        } else {
-//            DialogUtil.showInfoMessage("Vui lòng chọn ít nhất 1 (một) " + ObjectName + " để duyệt");
-//        }
-//    }
+        String msg = "Xác nhận đăng ký ĐKHP này";
+        int option = JOptionPane.showConfirmDialog(
+                this.mainPanel, msg, "Xác nhận", JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (option == JOptionPane.YES_OPTION) {
+            try {
+                RegistrationInfoController.registerCourse(courseID);
+                refreshData();
+                DialogUtil.showInfoMessage("Đăng ký thành công");
+            } catch (Exception ex) {
+                DialogUtil.showWarningMessage("Không đăng ký học phần được:\n" + ex.getMessage());
+            }
+        }
+
+    }
+
+    private void cancelCourse() {
+        long courseID = getSelectedIDFromRegistered();
+
+        if (courseID == -1) {
+            DialogUtil.showInfoMessage("Vui lòng chọn 1 (một) " + ObjectName + " để hủy đăng ký");
+            return;
+        }
+
+        String msg = "Xác nhận hủy đăng ký ĐKHP này";
+        int option = JOptionPane.showConfirmDialog(
+                this.mainPanel, msg, "Xác nhận", JOptionPane.OK_CANCEL_OPTION
+        );
+
+        if (option == JOptionPane.YES_OPTION) {
+            try {
+                RegistrationInfoController.cancelCourseByStudent(courseID);
+                refreshData();
+                DialogUtil.showInfoMessage("Hủy thành công");
+            } catch (Exception ex) {
+                DialogUtil.showWarningMessage("Không hủy không thành công:\n" + ex.getMessage());
+            }
+        }
+
+    }
 
     //Table selects..........................................................
     /**
@@ -399,7 +396,12 @@ public class StudentRegisterScreen implements ActionListener {
      */
     private long getSelectedIDFromRegister() {
         int index = tableRegister.getSelectedRow();
-        return (Long) tableRegister.getValueAt(index, COLUMN_ID);
+        long id = -1;
+        if (index != -1) {
+            id = (Long) tableRegister.getValueAt(index, COLUMN_ID);
+        }
+
+        return id;
     }
 
     /**
@@ -408,6 +410,11 @@ public class StudentRegisterScreen implements ActionListener {
      */
     private long getSelectedIDFromRegistered() {
         int index = tableRegistered.getSelectedRow();
-        return (Long) tableRegistered.getValueAt(index, COLUMN_ID);
+        long id = -1;
+        if (index != -1) {
+            id = (Long) tableRegistered.getValueAt(index, COLUMN_ID);
+        }
+
+        return id;
     }
 }

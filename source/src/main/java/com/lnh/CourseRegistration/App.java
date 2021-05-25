@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.util.List;
 
 public class App {
+    public static final int MAX_REGISTERED_COURSE = 8;
 
     public static void main(String[] args) {
 //        try {

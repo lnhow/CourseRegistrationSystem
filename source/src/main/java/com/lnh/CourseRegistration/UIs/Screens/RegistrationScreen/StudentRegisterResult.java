@@ -2,9 +2,11 @@ package com.lnh.CourseRegistration.UIs.Screens.RegistrationScreen;
 
 import com.lnh.CourseRegistration.Controllers.LoginController;
 import com.lnh.CourseRegistration.DAOs.RegistrationInfoDAO;
+import com.lnh.CourseRegistration.Entities.Course;
 import com.lnh.CourseRegistration.Entities.RegistrationInfo;
 import com.lnh.CourseRegistration.Entities.Student;
 import com.lnh.CourseRegistration.Entities.SupportEntities.RegisterStatus;
+import com.lnh.CourseRegistration.Entities.SupportEntities.Shift;
 import com.lnh.CourseRegistration.Utils.CustomComparator;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
 import com.lnh.CourseRegistration.Utils.HelperUtils;
@@ -32,12 +34,22 @@ public class StudentRegisterResult implements ActionListener {
     private JMenuItem refreshCurrent, refreshAll;
 
     private static final int COLUMN_ID = 0;
-    private static final int COLUMN_NAME = 1;
-    private static final int COLUMN_TIME = 2;
-    private static final int COLUMN_STATUS = 3;
-
-    Object[] columnLabels = {"Mã môn", "Tên môn", "TG Đăng ký", "Trạng thái"};
-    private static final int[] DISABLE_SORT_COLUMN_INDEXES = { COLUMN_NAME , COLUMN_STATUS};
+    private static final int COLUMN_SUBJECT_SHORT = 1;
+    private static final int COLUMN_SUBJECT = 2;
+    private static final int COLUMN_CLASS = 3;
+    private static final int COLUMN_MAX_SLOT = 4;
+    private static final int COLUMN_ROOM = 5;
+    private static final int COLUMN_TEACHER = 6;
+    private static final int COLUMN_TIME = 7;
+    private static final int COLUMN_STATUS = 8;
+    private static final int COLUMN_REGISTER_TIME = 9;
+    Object[] columnLabels = {
+            "ID", "Mã môn", "Môn học", "Lớp", "Tối đa", "Phòng", "Giảng viên", "Giờ học",
+            "Tình trạng", "TG Đăng ký"
+    };
+    private static final int[] DISABLE_SORT_COLUMN_INDEXES = {
+            COLUMN_MAX_SLOT, COLUMN_TEACHER, COLUMN_TIME, COLUMN_ROOM, COLUMN_STATUS
+    };
 
     public StudentRegisterResult() {
         initTable();
@@ -84,8 +96,11 @@ public class StudentRegisterResult implements ActionListener {
             sorter.setSortable(index, false);
         }
 
-        sorter.setComparator(COLUMN_ID, new CustomComparator.ComparatorString());
-        sorter.setComparator(COLUMN_TIME, new CustomComparator.ComparatorLocalDateTime());
+        sorter.setComparator(COLUMN_ID, new CustomComparator.ComparatorLong());
+        sorter.setComparator(COLUMN_SUBJECT_SHORT, new CustomComparator.ComparatorString());
+        sorter.setComparator(COLUMN_SUBJECT, new CustomComparator.ComparatorString());
+        sorter.setComparator(COLUMN_CLASS, new CustomComparator.ComparatorString());
+        sorter.setComparator(COLUMN_REGISTER_TIME, new CustomComparator.ComparatorLocalDateTime());
 
         //Sort by ID default
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
@@ -177,7 +192,7 @@ public class StudentRegisterResult implements ActionListener {
 
             List<Object[]> rows = RegistrationInfoDAO.getOfStudent(
                     student.getStudentNo(), RegisterStatus.STATUS_CONFIRMED);
-            setTableCurrentData(rows);
+            setTableAllData(rows);
         } catch (Exception ex) {
             String msg = "Lỗi không lấy được danh sách ĐKHP\n";
             DialogUtil.showErrorMessage(msg + ex.getMessage());
@@ -196,11 +211,20 @@ public class StudentRegisterResult implements ActionListener {
 
         for (Object[] row: list) {
             RegistrationInfo info = (RegistrationInfo) row[0];
-            Student student = (Student) row[1];
+            Course course = (Course) row[1];
+            Shift courseShift = course.getShift();
+            String time = course.getWeekday().getWeekdayName()
+                    + " ("+ courseShift.getShiftStart() +" - " + courseShift.getShiftEnd() +")";
             Object[] rowData = {
-                    student.getStudentNo(),
-                    student.getId(),
-                    student.getName(),
+                    course.getId(),
+                    course.getSubject().getShortName(),
+                    course.getSubject().getSubjectName(),
+                    course.getClassInfo().getClassName(),
+                    course.getMaxSlot(),
+                    course.getRoomName(),
+                    course.getTeacherName(),
+                    time,
+                    info.getStatus().getStatusDesc(),
                     info.getRegisterTime().toLocalDateTime()
             };
             tableCurrentModel.addRow(rowData);
@@ -214,16 +238,25 @@ public class StudentRegisterResult implements ActionListener {
      * Set table data to list of rows
      * @param list List data of row to set
      */
-    private void setTableAll(List<Object[]> list) {
-        removeTableCurrentData();
+    private void setTableAllData(List<Object[]> list) {
+        removeTableAllData();
 
         for (Object[] row: list) {
             RegistrationInfo info = (RegistrationInfo) row[0];
-            Student student = (Student) row[1];
+            Course course = (Course) row[1];
+            Shift courseShift = course.getShift();
+            String time = course.getWeekday().getWeekdayName()
+                    + " ("+ courseShift.getShiftStart() +" - " + courseShift.getShiftEnd() +")";
             Object[] rowData = {
-                    student.getStudentNo(),
-                    student.getId(),
-                    student.getName(),
+                    course.getId(),
+                    course.getSubject().getShortName(),
+                    course.getSubject().getSubjectName(),
+                    course.getClassInfo().getClassName(),
+                    course.getMaxSlot(),
+                    course.getRoomName(),
+                    course.getTeacherName(),
+                    time,
+                    info.getStatus().getStatusDesc(),
                     info.getRegisterTime().toLocalDateTime()
             };
             tableAllModel.addRow(rowData);

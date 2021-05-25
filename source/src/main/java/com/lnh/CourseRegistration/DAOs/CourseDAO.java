@@ -1,8 +1,6 @@
 package com.lnh.CourseRegistration.DAOs;
 
-import com.lnh.CourseRegistration.Entities.ClassInfo;
 import com.lnh.CourseRegistration.Entities.Course;
-import com.lnh.CourseRegistration.Entities.Subject;
 import com.lnh.CourseRegistration.Utils.HelperUtils;
 import com.lnh.CourseRegistration.Utils.HibernateUtil;
 import org.hibernate.HibernateException;
@@ -41,16 +39,14 @@ public class CourseDAO {
 
         try {
             String hql = "SELECT c," +
-                    " SUM(CASE WHEN info.status < 3 THEN 1 ELSE 0 END)" +
+                    " SUM(CASE WHEN info.status.statusID < 3 THEN 1 ELSE 0 END)" +
                     " FROM Course c" +
                     " LEFT JOIN RegistrationInfo info"+
-                    " ON c.id = info.course.id" +
+                    " ON c.id = info.courseID" +
                     " WHERE c.semester.isCurrentSemester = true" +
                     " GROUP BY c.id";
             Query<Object[]> query = session.createQuery(hql);
             list = query.list();
-            System.out.println(getAllInCurrentSemester().size());
-            System.out.println(list.size());
         } catch (HibernateException ex) {
             HelperUtils.throwException(ex.getMessage());
         } finally {
