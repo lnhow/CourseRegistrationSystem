@@ -2,7 +2,6 @@ package com.lnh.CourseRegistration.UIs.Screens.Course;
 
 import com.lnh.CourseRegistration.DAOs.CourseDAO;
 import com.lnh.CourseRegistration.DAOs.SemesterDAO;
-import com.lnh.CourseRegistration.DAOs.SubjectDAO;
 import com.lnh.CourseRegistration.Entities.Course;
 import com.lnh.CourseRegistration.Entities.Semester;
 import com.lnh.CourseRegistration.Entities.SupportEntities.Shift;
@@ -34,7 +33,6 @@ public class CourseScreen extends JFrame implements ActionListener {
     private JPopupMenu popupMenu;
     private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, searchMenuItem, selectMenuItem;
 
-    private static JFrame AppFrame;
     private DefaultTableModel tableModel;
 
     private static final String ObjectName = "Học phần"; //Name of the current managed object type to display
@@ -131,6 +129,13 @@ public class CourseScreen extends JFrame implements ActionListener {
             }
         };
         mainTable.addMouseListener(mouseAdapter);
+        mainTable.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                if (me.getClickCount() == 2) {//Detect double click events
+                    viewClassStudents();
+                }
+            }
+        });
         //Make the empty area on table pane (if present) can show popup
         paneTable.addMouseListener(mouseAdapter);
     }
@@ -186,6 +191,9 @@ public class CourseScreen extends JFrame implements ActionListener {
         try {
             List<Course> list = CourseDAO.getAllInCurrentSemester();
             setTableData(list);
+            if (list != null && list.size() > 1) {
+                courseStudentScreen.setCourseID((list.get(0)).getId());
+            }
         } catch (Exception ex) {
             String msg = "Lỗi không lấy được danh sách " + ObjectName +"\n";
             DialogUtil.showErrorMessage(msg + ex.getMessage());
@@ -214,18 +222,18 @@ public class CourseScreen extends JFrame implements ActionListener {
     private void setTableData(List<Course> rows) {
         removeTableData();
 
-        for (Course row: rows) {
-            Shift courseShift = row.getShift();
-            String time = row.getWeekday().getWeekdayName()
+        for (Course course: rows) {
+            Shift courseShift = course.getShift();
+            String time = course.getWeekday().getWeekdayName()
                     + " ("+ courseShift.getShiftStart() +" - " + courseShift.getShiftEnd() +")";
             Object[] rowData = {
-                    row.getId(),
-                    row.getSubject().getShortName(),
-                    row.getSubject().getSubjectName(),
-                    row.getClassInfo().getClassName(),
-                    row.getMaxSlot(),
-                    row.getRoomName(),
-                    row.getTeacherName(),
+                    course.getId(),
+                    course.getSubject().getShortName(),
+                    course.getSubject().getSubjectName(),
+                    course.getClassInfo().getClassName(),
+                    course.getMaxSlot(),
+                    course.getRoomName(),
+                    course.getTeacherName(),
                     time
             };
             tableModel.addRow(rowData);
@@ -343,14 +351,14 @@ public class CourseScreen extends JFrame implements ActionListener {
      * @return Selected Course (null if selected none)
      */
     private Course fromSelectedTableRow() throws Exception {
-        Course classInfo = null;
+        Course course = null;
         long id = getSelectedCourseID();
 
         if (id > -1) {
-            classInfo = CourseDAO.getByCourseID(id);
+            course = CourseDAO.getByCourseID(id);
         }
 
-        return classInfo;
+        return course;
     }
 
     /**

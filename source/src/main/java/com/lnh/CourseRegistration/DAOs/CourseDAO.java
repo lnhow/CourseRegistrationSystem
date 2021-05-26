@@ -72,6 +72,7 @@ public class CourseDAO {
         return result;
     }
 
+    //Bugged: Hibernate weird joining issues
     public static List<Object[]> searchInCurrentSemesterWithInfoByName(String value) throws Exception {
         List<Object[]> list = null;
         SessionFactory factory = HibernateUtil.getSessionFactory();
@@ -98,6 +99,7 @@ public class CourseDAO {
         return list;
     }
 
+    //Bugged: Hibernate weird joining issues
     public static List<Object[]> searchInCurrentSemesterWithInfoByShortName(String value) throws Exception {
         List<Object[]> list = null;
         SessionFactory factory = HibernateUtil.getSessionFactory();
@@ -130,7 +132,7 @@ public class CourseDAO {
         Session session = factory.openSession();
 
         try {
-            String hql = "SELECT c," +
+            String hql = "SELECT c" +
                     " FROM Course c" +
                     " WHERE c.semester.isCurrentSemester = true" +
                     " AND lower(c.subject.subjectName) LIKE lower(:search_name)";

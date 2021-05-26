@@ -19,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,11 +50,12 @@ public class CourseStudentScreen implements ActionListener {
     private static final String ObjectName = "ĐKHP Sinh viên"; //Name of the current managed object type to display
 
     //Table related attributes
-    private static final int COLUMN_DBID = 0;
-    private static final int COLUMN_ID = 1;
-    private static final int COLUMN_NAME = 2;
-    private static final int COLUMN_TIME = 3;
-    Object[] columnLabels = {"ID", "Mã SV", "Họ tên", "TG Đăng ký"};
+    private static final int COLUMN_NUM = 0;
+    private static final int COLUMN_DBID = 1;
+    private static final int COLUMN_ID = 2;
+    private static final int COLUMN_NAME = 3;
+    private static final int COLUMN_TIME = 4;
+    Object[] columnLabels = {"STT" ,"ID", "Mã SV", "Họ tên", "TG Đăng ký"};
     private static final int[] DISABLE_SORT_COLUMN_INDEXES = { COLUMN_NAME };
 
     public CourseStudentScreen() {
@@ -90,13 +90,14 @@ public class CourseStudentScreen implements ActionListener {
             sorter.setSortable(index, false);
         }
 
+        sorter.setComparator(COLUMN_NUM, new CustomComparator.ComparatorLong());
         sorter.setComparator(COLUMN_DBID, new CustomComparator.ComparatorLong());
         sorter.setComparator(COLUMN_ID, new CustomComparator.ComparatorString());
         sorter.setComparator(COLUMN_TIME, new CustomComparator.ComparatorLocalDateTime());
 
         //Sort by ID default
         List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-        sortKeys.add(new RowSorter.SortKey(COLUMN_ID, SortOrder.ASCENDING));
+        sortKeys.add(new RowSorter.SortKey(COLUMN_NUM, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
         sorter.sort();
 
@@ -311,15 +312,18 @@ public class CourseStudentScreen implements ActionListener {
     private void setTableConfirmedData(List<Object[]> list) {
         removeTableConfirmedData();
 
+        int count = 1;
         for (Object[] row: list) {
             RegistrationInfo info = (RegistrationInfo) row[0];
             Student student = (Student) row[1];
             Object[] rowData = {
+                    count,
                     student.getStudentNo(),
                     student.getId(),
                     student.getName(),
                     info.getRegisterTime().toLocalDateTime()
             };
+            count++;
             tableConfirmedModel.addRow(rowData);
         }
     }
@@ -334,15 +338,18 @@ public class CourseStudentScreen implements ActionListener {
     private void setTableWaitingData(List<Object[]> list) {
         removeTableWaitingData();
 
+        int count = 1;
         for (Object[] row: list) {
             RegistrationInfo info = (RegistrationInfo) row[0];
             Student student = (Student) row[1];
             Object[] rowData = {
+                    count,
                     student.getStudentNo(),
                     student.getId(),
                     student.getName(),
                     info.getRegisterTime().toLocalDateTime()
             };
+            count++;
             tableWaitingModel.addRow(rowData);
         }
     }
@@ -357,15 +364,18 @@ public class CourseStudentScreen implements ActionListener {
     private void setTableCancelledData(List<Object[]> list) {
         removeTableCancelledData();
 
+        int count = 1;
         for (Object[] row: list) {
             RegistrationInfo info = (RegistrationInfo) row[0];
             Student student = (Student) row[1];
             Object[] rowData = {
+                    count,
                     student.getStudentNo(),
                     student.getId(),
                     student.getName(),
                     info.getRegisterTime().toLocalDateTime()
             };
+            count++;
             tableCancelledModel.addRow(rowData);
         }
     }
