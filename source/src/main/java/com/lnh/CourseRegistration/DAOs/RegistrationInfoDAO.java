@@ -327,7 +327,7 @@ public class RegistrationInfoDAO {
                 " AND info.status.id NOT IN (:status)";
         try {
             Query query = session.createQuery(hqlCourse);
-            query.setParameter("courseID", studentDBID);
+            query.setParameter("courseID", courseID);
             query.setParameter("status",
                     Arrays.asList(RegisterStatus.STATUS_CANCELLED, RegisterStatus.STATUS_CANCELLED_BY_STUDENT)
             );
