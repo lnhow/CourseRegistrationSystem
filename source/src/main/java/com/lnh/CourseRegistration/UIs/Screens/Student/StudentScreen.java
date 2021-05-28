@@ -1,15 +1,11 @@
 package com.lnh.CourseRegistration.UIs.Screens.Student;
 
 import com.lnh.CourseRegistration.DAOs.ClassInfoDAO;
-import com.lnh.CourseRegistration.DAOs.StaffDAO;
 import com.lnh.CourseRegistration.DAOs.StudentDAO;
 import com.lnh.CourseRegistration.Entities.ClassInfo;
-import com.lnh.CourseRegistration.Entities.Staff;
 import com.lnh.CourseRegistration.Entities.Student;
-import com.lnh.CourseRegistration.UIs.Screens.Staff.FormEditStaff;
 import com.lnh.CourseRegistration.Utils.CustomComparator;
 import com.lnh.CourseRegistration.Utils.DialogUtil;
-import com.lnh.CourseRegistration.Utils.HelperUtils;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -29,7 +25,7 @@ public class StudentScreen extends JFrame implements ActionListener{
     private JLabel lblClass;
 
     private JPopupMenu popupMenu;
-    private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, searchMenuItem;
+    private JMenuItem refreshMenuItem, newMenuItem, editMenuItem, deleteMenuItem, searchMenuItem, listCourseMenuItem;
 
     private int currentClassID = -1;
     private ClassInfo currentClassInfo;
@@ -88,12 +84,14 @@ public class StudentScreen extends JFrame implements ActionListener{
         editMenuItem = new JMenuItem("Chỉnh sửa");
         deleteMenuItem = new JMenuItem("Xóa");
         searchMenuItem = new JMenuItem("Tìm kiếm");
+        listCourseMenuItem = new JMenuItem("DS Lớp đăng ký");
 
         refreshMenuItem.addActionListener(this);
         searchMenuItem.addActionListener(this);
         newMenuItem.addActionListener(this);
         editMenuItem.addActionListener(this);
         deleteMenuItem.addActionListener(this);
+        listCourseMenuItem.addActionListener(this);
 
         popupMenu.add(searchMenuItem);
         popupMenu.add(refreshMenuItem);
@@ -101,6 +99,7 @@ public class StudentScreen extends JFrame implements ActionListener{
         popupMenu.add(newMenuItem);
         popupMenu.add(editMenuItem);
         popupMenu.add(deleteMenuItem);
+        popupMenu.add(listCourseMenuItem);
         MouseAdapter mouseAdapter = new MouseAdapter() {
             public void mouseReleased(MouseEvent me) {
                 if(me.isPopupTrigger())
@@ -135,6 +134,8 @@ public class StudentScreen extends JFrame implements ActionListener{
             search();
         } else if (source == refreshMenuItem) {
             refresh();
+        } else if (source == listCourseMenuItem) {
+            viewCourseDialog();
         }
     }
 
@@ -246,11 +247,26 @@ public class StudentScreen extends JFrame implements ActionListener{
     }
 
     /**
-     * Open staff edit windows
+     * Open student course windows
+     */
+    private void viewCourseDialog() {
+        long DBID = getSelectedID();
+
+        if (DBID == -1) {
+            DialogUtil.showWarningMessage("Vui lòng chọn một " + ObjectName + " để xem");
+            return;
+        }
+
+        //Dialog so that it block staff screen
+        new StudentCourseRegistered(this, DBID);
+    }
+
+    /**
+     * Open student edit windows
      * @param student student to edit (<b>null</b> to add new staff)
      */
     private void openEditDialog(Student student) {
-        //Dialog so that it block staff screen
+        //Dialog so that it block screen
         new FormEditStudent(this, student, currentClassInfo);
     }
 

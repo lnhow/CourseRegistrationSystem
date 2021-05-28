@@ -23,7 +23,7 @@ public class HibernateUtil {
         } catch (Throwable ex) {
             System.err.println(
                     "Initial SessionFactory creation failed." + ex);
-            System.err.println(ex.getMessage());
+            DialogUtil.showErrorMessage("Lỗi không kết nối được với CSDL\n"+ex.getMessage());
             throw new ExceptionInInitializerError(ex);
         }
     }

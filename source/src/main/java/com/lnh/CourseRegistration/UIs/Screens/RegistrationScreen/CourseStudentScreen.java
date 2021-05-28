@@ -470,7 +470,7 @@ public class CourseStudentScreen implements ActionListener {
                 }
             }
         } else {
-            DialogUtil.showInfoMessage("Vui lòng chọn ít nhất 1 (một) " + ObjectName + " để duyệt");
+            DialogUtil.showInfoMessage("Vui lòng chọn ít nhất 1 (một) " + ObjectName + " để hủy");
         }
     }
 

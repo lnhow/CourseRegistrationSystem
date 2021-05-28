@@ -117,6 +117,13 @@ public class ClassInfoScreen extends JFrame implements ActionListener {
                     popupMenu.show(me.getComponent(), me.getX(), me.getY());
             }
         };
+        mainTable.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent me) {
+                if (me.getClickCount() == 2) {//Detect double click events
+                    viewClassStudents();
+                }
+            }
+        });
         mainTable.addMouseListener(mouseAdapter);
         //Make the empty area on table pane (if present) can show popup
         paneTable.addMouseListener(mouseAdapter);
