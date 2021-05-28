@@ -12,8 +12,18 @@ import java.util.Map;
 
 public class HibernateUtil {
     private static final boolean IS_DEBUG = false;
-    private static final SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory;
     static {
+
+    }
+    public static SessionFactory getSessionFactory() throws ExceptionInInitializerError {
+        if (sessionFactory == null) {
+            initSessionFactory();
+        }
+        return sessionFactory;
+    }
+
+    private static void initSessionFactory() throws ExceptionInInitializerError {
         try {
             sessionFactory = new Configuration().configure().buildSessionFactory();
 
@@ -23,12 +33,8 @@ public class HibernateUtil {
         } catch (Throwable ex) {
             System.err.println(
                     "Initial SessionFactory creation failed." + ex);
-            DialogUtil.showErrorMessage("Lỗi không kết nối được với CSDL\n"+ex.getMessage());
-            throw new ExceptionInInitializerError(ex);
+            throw new ExceptionInInitializerError(ex.getMessage());
         }
-    }
-    public static SessionFactory getSessionFactory() {
-        return sessionFactory;
     }
 
     public static void printMappedClass() {

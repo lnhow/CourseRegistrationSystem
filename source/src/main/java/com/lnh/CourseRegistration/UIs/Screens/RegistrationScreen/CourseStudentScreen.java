@@ -257,7 +257,8 @@ public class CourseStudentScreen implements ActionListener {
                 + " - " + currentCourse.getSemester().getSemesterYear()
                 + " | " + currentCourse.getSemester().getSemesterName();
         lblClass.setText(classMsg);
-        lblTeacher.setText("Giảng viên lý thuyết: " + currentCourse.getTeacherName());
+        String teacherName = currentCourse.getTeacherName();
+        lblTeacher.setText("Giảng viên lý thuyết: " + (teacherName.equals("") ? "Chưa có": teacherName));
         lblTime.setText("Thời gian học: " + currentCourse.getWeekday() + " Ca " + currentCourse.getShift().toString());
     }
 

@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.InvocationTargetException;
 
 public class FormLogin {
     private JFrame AppFrame;
@@ -58,15 +59,46 @@ public class FormLogin {
                     return;
                 }
 
-                try {
-                    LoginController.logIn(username, password);
-                } catch (Exception ex) {
-                    DialogUtil.showWarningMessage(ex.getMessage());
-                    return;
-                }
+                //Optimize logging in first time performance
+                Thread thread = new Thread(() -> {
+                    try {
+                        LoginController.logIn(username, password);
 
-                processLogin();
-                AppFrame.setCursor(Cursor.getDefaultCursor());
+                    } catch (Exception ex) {
+                        DialogUtil.showWarningMessage(ex.getMessage());
+                        try {
+                            SwingUtilities.invokeAndWait(() -> {
+                                txtMessage.setText("");
+                                AppFrame.setCursor(Cursor.getDefaultCursor());
+                            });
+                        } catch (InterruptedException | InvocationTargetException interruptedException) {
+                            interruptedException.printStackTrace();
+                        }
+                        return;
+                    }  catch (ExceptionInInitializerError ex) {
+                        DialogUtil.showWarningMessage("Lỗi kết nối CSDL\n"+ ex.getMessage());
+                        try {
+                            SwingUtilities.invokeAndWait(() -> {
+                                txtMessage.setText("");
+                                AppFrame.setCursor(Cursor.getDefaultCursor());
+                            });
+                        } catch (InterruptedException | InvocationTargetException interruptedException) {
+                            interruptedException.printStackTrace();
+                        }
+                        return;
+                    }
+
+                    try {
+                        SwingUtilities.invokeAndWait(() -> {
+                            processLogin();
+                            txtMessage.setText("");
+                            AppFrame.setCursor(Cursor.getDefaultCursor());
+                        });
+                    } catch (InterruptedException | InvocationTargetException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+                });
+                thread.start();
             }
         });
         ckcShowPassword.addActionListener(new ActionListener() {

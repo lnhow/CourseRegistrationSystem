@@ -81,7 +81,7 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font size="20" style="0"/>
+                      <font size="14"/>
                     </properties>
                   </component>
                   <component id="3264d" class="javax.swing.JLabel">
@@ -106,7 +106,7 @@
                       </grid>
                     </constraints>
                     <properties>
-                      <font size="20"/>
+                      <font size="14"/>
                     </properties>
                   </component>
                   <component id="65a0c" class="javax.swing.JCheckBox" binding="ckcShowPassword">
