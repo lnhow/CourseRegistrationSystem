@@ -27,9 +27,6 @@
         <element id="library" level="project" name="Maven: org.jboss:jandex:2.2.3.Final" />
         <element id="library" level="project" name="Maven: org.jvnet.staxex:stax-ex:1.8" />
         <element id="library" level="project" name="Maven: org.postgresql:postgresql:42.2.20" />
-        <element id="library" level="project" name="Maven: org.pushing-pixels:radiance-neon:3.5.1" />
-        <element id="library" level="project" name="Maven: org.pushing-pixels:radiance-substance:3.5.1" />
-        <element id="library" level="project" name="Maven: org.pushing-pixels:radiance-trident:3.5.1" />
       </element>
     </root>
   </artifact>

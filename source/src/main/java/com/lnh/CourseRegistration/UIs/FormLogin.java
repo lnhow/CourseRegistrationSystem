@@ -90,9 +90,9 @@ public class FormLogin {
 
                     try {
                         SwingUtilities.invokeAndWait(() -> {
-                            processLogin();
                             txtMessage.setText("");
                             AppFrame.setCursor(Cursor.getDefaultCursor());
+                            processLogin();
                         });
                     } catch (InterruptedException | InvocationTargetException interruptedException) {
                         interruptedException.printStackTrace();
