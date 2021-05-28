@@ -90,7 +90,7 @@ public class CourseStudentScreen implements ActionListener {
             sorter.setSortable(index, false);
         }
 
-        sorter.setComparator(COLUMN_NUM, new CustomComparator.ComparatorLong());
+        sorter.setComparator(COLUMN_NUM, new CustomComparator.ComparatorInt());
         sorter.setComparator(COLUMN_DBID, new CustomComparator.ComparatorLong());
         sorter.setComparator(COLUMN_ID, new CustomComparator.ComparatorString());
         sorter.setComparator(COLUMN_TIME, new CustomComparator.ComparatorLocalDateTime());
